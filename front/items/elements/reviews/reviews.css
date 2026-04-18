@@ -1,0 +1,350 @@
+/* Root */
+
+.e-64ecb145
+{
+	display: block;
+	width: 100%;
+}
+
+/* Holder */
+
+.e-64ecb145 > .holder
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-l);
+}
+
+/* ===== SUMMARY ===== */
+
+.e-64ecb145 > .holder > .summary
+{
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: var(--ot-spacing-l);
+	padding-bottom: var(--ot-spacing-l);
+	border-bottom: 1px solid var(--ot-bg-1-border);
+}
+
+/* Overall */
+
+.e-64ecb145 > .holder > .summary > .overall
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: var(--ot-spacing-l);
+	background: var(--ot-bg-1);
+	border: 1px solid var(--ot-bg-1-border);
+	border-radius: var(--ot-radius-l);
+	min-width: 180px;
+}
+
+.e-64ecb145 > .holder > .summary > .overall > .overall-num
+{
+	font-family: var(--ot-font-secondary);
+	font-size: 56px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	line-height: 1;
+	letter-spacing: -0.03em;
+	margin-bottom: var(--ot-spacing-s);
+}
+
+.e-64ecb145 > .holder > .summary > .overall > .overall-stars
+{
+	display: flex;
+	gap: 2px;
+	margin-bottom: var(--ot-spacing-s);
+}
+
+.e-64ecb145 > .holder > .summary > .overall > .overall-stars .star
+{
+	font-size: 18px;
+	color: var(--ot-bg-3);
+}
+
+.e-64ecb145 > .holder > .summary > .overall > .overall-stars .star.filled
+{
+	color: var(--ot-orange);
+	font-variation-settings: 'FILL' 1;
+}
+
+.e-64ecb145 > .holder > .summary > .overall > .overall-label
+{
+	font-size: 13px;
+	color: var(--ot-text-2);
+}
+
+/* Breakdown */
+
+.e-64ecb145 > .holder > .summary > .breakdown
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: center;
+}
+
+.e-64ecb145 > .holder > .summary > .breakdown > .bar-row
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.e-64ecb145 > .holder > .summary > .breakdown > .bar-row > .bar-label
+{
+	font-size: 12px;
+	color: var(--ot-text-2);
+	width: 100px;
+	text-align: right;
+}
+
+.e-64ecb145 > .holder > .summary > .breakdown > .bar-row > .bar
+{
+	flex: 1;
+	height: 6px;
+	background: var(--ot-bg-2);
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+.e-64ecb145 > .holder > .summary > .breakdown > .bar-row > .bar > .bar-fill
+{
+	height: 100%;
+	background: var(--ot-text-1);
+	border-radius: 3px;
+	transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.e-64ecb145 > .holder > .summary > .breakdown > .bar-row > .bar-num
+{
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ot-text-2);
+	width: 30px;
+}
+
+/* ===== REVIEW LIST ===== */
+
+.e-64ecb145 > .holder > .list
+{
+	display: flex;
+	flex-direction: column;
+}
+
+/* Single review */
+
+.e-64ecb145 .review
+{
+	padding: var(--ot-spacing-l) 0;
+	border-bottom: 1px solid var(--ot-bg-1-border);
+}
+
+.e-64ecb145 .review:last-child
+{
+	border-bottom: none;
+}
+
+/* Review head */
+
+.e-64ecb145 .review > .review-head
+{
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin-bottom: 14px;
+}
+
+.e-64ecb145 .review > .review-head > .author
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.e-64ecb145 .review > .review-head > .author > .avatar
+{
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: var(--ot-bg-3);
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.e-64ecb145 .review > .review-head > .author > .avatar > i
+{
+	font-size: 20px;
+	color: var(--ot-text-3);
+}
+
+.e-64ecb145 .review > .review-head > .author > .info
+{
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.e-64ecb145 .review > .review-head > .author > .info > .name
+{
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--ot-text-1);
+}
+
+.e-64ecb145 .review > .review-head > .author > .info > .location
+{
+	font-size: 11.5px;
+	color: var(--ot-text-2);
+}
+
+/* Review meta */
+
+.e-64ecb145 .review > .review-head > .review-meta
+{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.e-64ecb145 .review > .review-head > .review-meta > .review-stars
+{
+	display: flex;
+	gap: 1px;
+}
+
+.e-64ecb145 .review > .review-head > .review-meta > .review-stars > .star
+{
+	font-size: 15px;
+	color: var(--ot-bg-3);
+}
+
+.e-64ecb145 .review > .review-head > .review-meta > .review-stars > .star.filled
+{
+	color: var(--ot-orange);
+	font-variation-settings: 'FILL' 1;
+}
+
+.e-64ecb145 .review > .review-head > .review-meta > .review-date
+{
+	font-size: 11.5px;
+	color: var(--ot-text-3);
+}
+
+/* Review text */
+
+.e-64ecb145 .review > .review-text
+{
+	font-size: 13.5px;
+	line-height: 1.65;
+	color: var(--ot-text-1);
+	margin: 0 0 14px;
+}
+
+/* Reply */
+
+.e-64ecb145 .review > .reply
+{
+	padding: 14px 16px;
+	background: var(--ot-bg-2);
+	border-left: 3px solid var(--ot-brand);
+	border-radius: 0 var(--ot-radius-m) var(--ot-radius-m) 0;
+	margin-bottom: 14px;
+}
+
+.e-64ecb145 .review > .reply > .reply-who
+{
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--ot-brand);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	margin-bottom: 4px;
+}
+
+.e-64ecb145 .review > .reply > .reply-text
+{
+	font-size: 12.5px;
+	line-height: 1.55;
+	color: var(--ot-text-1);
+	margin: 0;
+}
+
+/* Review actions */
+
+.e-64ecb145 .review > .review-actions
+{
+	display: flex;
+	gap: 6px;
+}
+
+.e-64ecb145 .review > .review-actions > .review-action
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 6px 12px;
+	background: none;
+	border: 1px solid var(--ot-bg-1-border);
+	border-radius: 100px;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--ot-text-2);
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.e-64ecb145 .review > .review-actions > .review-action:hover
+{
+	background: var(--ot-bg-2);
+	border-color: var(--ot-bg-2-border);
+	color: var(--ot-text-1);
+}
+
+.e-64ecb145 .review > .review-actions > .review-action > i
+{
+	font-size: 13px;
+}
+
+/* ===== BORDER VARIANT ===== */
+
+.e-64ecb145 > .holder.border
+{
+	background: var(--ot-bg-1);
+	border: 1px solid var(--ot-bg-1-border);
+	border-radius: var(--ot-radius-l);
+	padding: var(--ot-spacing-l);
+}
+
+/* ===== COMPACT VARIANT ===== */
+
+.e-64ecb145 > .holder.compact > .summary
+{
+	grid-template-columns: 1fr;
+}
+
+.e-64ecb145 > .holder.compact > .summary > .overall
+{
+	flex-direction: row;
+	gap: var(--ot-spacing-m);
+	padding: var(--ot-spacing-m);
+	min-width: 0;
+}
+
+.e-64ecb145 > .holder.compact > .summary > .overall > .overall-num
+{
+	font-size: 36px;
+}
+
+.e-64ecb145 > .holder.compact .review > .review-head > .author > .avatar
+{
+	width: 36px;
+	height: 36px;
+}

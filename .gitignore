@@ -1,0 +1,9 @@
+node_modules/
+.env
+.DS_Store
+demo/
+demo.html
+demo-app.html
+CLAUDE.md
+.claude/
+.git.backup-travel/

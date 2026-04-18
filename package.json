@@ -1,0 +1,24 @@
+{
+    "name": "mesh-app",
+    "version": "0.1.0",
+    "description": "Mesh — your hardware, your cloud, one click.",
+    "type": "module",
+    "license": "AGPL-3.0-or-later",
+    "author": "Dejan Tomic <hi@iamdejan.com>",
+    "homepage": "https://mesh.onetype.ai",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/onetype-ai/mesh-app.git"
+    },
+    "imports": {
+        "#shared/*": "./shared/addons/*",
+        "#auth/*": "./back/services/auth/*",
+        "#servers/*": "./back/addons/servers/*",
+        "#scripts/*": "./back/addons/scripts/*",
+        "#approvals/*": "./back/addons/approvals/*",
+        "#packages/*": "./back/addons/packages/*"
+    },
+    "dependencies": {
+        "@onetype/framework": "^2.0.55"
+    }
+}

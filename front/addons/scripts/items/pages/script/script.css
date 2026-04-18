@@ -1,0 +1,37 @@
+.script-body
+{
+	display: grid;
+	grid-template-columns: 1fr 340px;
+	gap: var(--ot-spacing-l);
+	align-items: start;
+}
+
+.script-main
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-m);
+	min-width: 0;
+}
+
+.script-side
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-m);
+	position: sticky;
+	top: var(--ot-spacing-l);
+}
+
+@media (max-width: 1024px)
+{
+	.script-body
+	{
+		grid-template-columns: 1fr;
+	}
+
+	.script-side
+	{
+		position: static;
+	}
+}

@@ -1,0 +1,199 @@
+/* ===== Root — placeholder hash, update once framework generates ===== */
+
+.e-680cc779
+{
+	display: block;
+	width: 100%;
+}
+
+.e-680cc779 > .box
+{
+	position: relative;
+	padding: var(--ot-spacing-l);
+	border-bottom: 1px solid var(--ot-bg-2-border);
+	overflow: hidden;
+	isolation: isolate;
+}
+
+/* ===== Aurora ===== */
+
+.e-680cc779 > .box > .aurora
+{
+	position: absolute;
+	top: -40%;
+	left: -15%;
+	width: 70%;
+	height: 160%;
+	background: radial-gradient(ellipse at center, var(--ot-brand-opacity) 0%, transparent 60%);
+	filter: blur(40px);
+	pointer-events: none;
+	z-index: -1;
+}
+
+.e-680cc779 > .box.accent-blue > .aurora
+{
+	background: radial-gradient(ellipse at center, var(--ot-blue-opacity) 0%, transparent 60%);
+}
+
+.e-680cc779 > .box.accent-green > .aurora
+{
+	background: radial-gradient(ellipse at center, var(--ot-green-opacity) 0%, transparent 60%);
+}
+
+.e-680cc779 > .box.accent-orange > .aurora
+{
+	background: radial-gradient(ellipse at center, var(--ot-orange-opacity) 0%, transparent 60%);
+}
+
+/* ===== Grid pattern ===== */
+
+.e-680cc779 > .box > .grid
+{
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(var(--ot-bg-3-border) 1px, transparent 1px),
+		linear-gradient(90deg, var(--ot-bg-3-border) 1px, transparent 1px);
+	background-size: 44px 44px;
+	background-position: -1px -1px;
+	mask-image: radial-gradient(ellipse 60% 80% at 80% 30%, black 0%, transparent 70%);
+	-webkit-mask-image: radial-gradient(ellipse 60% 80% at 80% 30%, black 0%, transparent 70%);
+	opacity: 0.5;
+	pointer-events: none;
+	z-index: -1;
+}
+
+/* ===== Body ===== */
+
+.e-680cc779 > .box > .body
+{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+	max-width: 720px;
+}
+
+/* ===== Eyebrow (scope) ===== */
+
+.e-680cc779 > .box > .body > .eyebrow
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	align-self: flex-start;
+	padding: 6px 12px;
+	border-radius: 100px;
+	font-size: 10.5px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+.e-680cc779 > .box > .body > .eyebrow > i
+{
+	font-size: 13px;
+}
+
+.e-680cc779 > .box > .body > .eyebrow.eyebrow-brand
+{
+	background: var(--ot-brand-opacity);
+	border: 1px solid var(--ot-brand-border);
+	color: var(--ot-brand);
+}
+
+.e-680cc779 > .box > .body > .eyebrow.eyebrow-blue
+{
+	background: var(--ot-blue-opacity);
+	border: 1px solid var(--ot-blue-border);
+	color: var(--ot-blue);
+}
+
+.e-680cc779 > .box > .body > .eyebrow.eyebrow-green
+{
+	background: var(--ot-green-opacity);
+	border: 1px solid var(--ot-green-border);
+	color: var(--ot-green);
+}
+
+.e-680cc779 > .box > .body > .eyebrow.eyebrow-orange
+{
+	background: var(--ot-orange-opacity);
+	border: 1px solid var(--ot-orange-border);
+	color: var(--ot-orange);
+}
+
+/* ===== Name + output inline ===== */
+
+.e-680cc779 > .box > .body > .name
+{
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 16px;
+	font-size: 56px;
+	font-weight: 600;
+	letter-spacing: -0.035em;
+	line-height: 1;
+	color: var(--ot-text-1);
+	margin: 0;
+}
+
+.e-680cc779 > .box > .body > .name > .output
+{
+	display: inline-flex;
+	align-items: center;
+	padding: 5px 12px;
+	border-radius: 100px;
+	background: var(--ot-bg-3);
+	border: 1px solid var(--ot-bg-3-border);
+	font-family: 'SF Mono', Monaco, monospace;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--ot-text-2);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0;
+	text-transform: uppercase;
+	transform: translateY(-6px);
+}
+
+/* ===== Description ===== */
+
+.e-680cc779 > .box > .body > .description
+{
+	font-size: 17px;
+	line-height: 1.5;
+	color: var(--ot-text-2);
+	margin: 0;
+}
+
+/* ===== Meta row ===== */
+
+.e-680cc779 > .box > .body > .meta
+{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 20px;
+	margin-top: 10px;
+	padding-top: 20px;
+	border-top: 1px solid var(--ot-bg-3-border);
+}
+
+.e-680cc779 > .box > .body > .meta > .meta-item
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--ot-text-2);
+	text-transform: capitalize;
+}
+
+.e-680cc779 > .box > .body > .meta > .meta-item > i
+{
+	font-size: 15px;
+	color: var(--ot-text-3);
+}

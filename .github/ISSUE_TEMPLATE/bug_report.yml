@@ -1,0 +1,41 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `node back`
+        2. Click ...
+        3. See error
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Mesh version or commit
+      placeholder: v0.1.0 or git sha
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: OS and Node version
+      placeholder: macOS 14 / Node 20.11
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant output from `node back` or the browser console.
+      render: shell

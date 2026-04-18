@@ -1,0 +1,98 @@
+/* Root */
+
+.e-47276740
+{
+	display: block;
+	width: 100%;
+	min-height: 100vh;
+}
+
+/* Split */
+
+.e-47276740 > .split
+{
+	display: grid;
+	grid-template-columns: 1.1fr 1fr;
+	min-height: 100vh;
+	width: 100%;
+}
+
+/* Showcase */
+
+.e-47276740 > .split > .showcase
+{
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	padding: var(--ot-spacing-l);
+}
+
+.e-47276740 > .split > .showcase > .e-5a588b3e
+{
+	width: 100%;
+	height: 100%;
+}
+
+.e-47276740 > .split > .showcase > .e-5a588b3e > .holder
+{
+	height: 100%;
+}
+
+/* Form */
+
+.e-47276740 > .split > .form
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--ot-bg-1);
+	padding: var(--ot-spacing-l);
+}
+
+.e-47276740 > .split > .form > .holder
+{
+	width: 100%;
+	max-width: 420px;
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-l);
+}
+
+.e-47276740 > .split > .form > .holder > .header > h1
+{
+	font-family: var(--ot-font-secondary);
+	font-size: 36px;
+	font-weight: 500;
+	letter-spacing: -0.022em;
+	color: var(--ot-text-1);
+	margin: 0 0 6px;
+	font-variation-settings: 'opsz' 144;
+}
+
+.e-47276740 > .split > .form > .holder > .header > p
+{
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--ot-text-2);
+	margin: 0;
+}
+
+.e-47276740 > .split > .form > .holder > .actions
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-s);
+}
+
+@media screen and (max-width: 900px)
+{
+	.e-47276740 > .split
+	{
+		grid-template-columns: 1fr;
+	}
+
+	.e-47276740 > .split > .showcase
+	{
+		min-height: 320px;
+	}
+}

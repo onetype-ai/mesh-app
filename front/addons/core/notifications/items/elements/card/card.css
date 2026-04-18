@@ -1,0 +1,127 @@
+/* Root */
+
+.e-7aa040a4
+{
+	display: block;
+	width: 100%;
+}
+
+/* Holder */
+
+.e-7aa040a4 > .holder
+{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 18px 22px;
+	background: var(--ot-bg-1);
+	border: 1px solid var(--ot-bg-1-border);
+	border-radius: var(--ot-radius-m);
+	position: relative;
+	transition: border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.e-7aa040a4 > .holder:hover
+{
+	border-color: var(--ot-bg-2-border);
+}
+
+/* Unread */
+
+.e-7aa040a4 > .holder.unread
+{
+	background: var(--ot-brand-opacity);
+	border-color: var(--ot-bg-2-border);
+}
+
+/* Indicator dot */
+
+.e-7aa040a4 > .holder > .indicator
+{
+	display: none;
+}
+
+.e-7aa040a4 > .holder.unread > .indicator
+{
+	display: block;
+	position: absolute;
+	top: 22px;
+	left: 8px;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--ot-brand);
+}
+
+/* Icon */
+
+.e-7aa040a4 > .holder > .icon
+{
+	width: 42px;
+	height: 42px;
+	border-radius: 11px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.e-7aa040a4 > .holder > .icon > i
+{
+	font-size: 20px;
+}
+
+/* Color variants */
+
+.e-7aa040a4 > .holder.brand > .icon { background: var(--ot-brand-opacity); }
+.e-7aa040a4 > .holder.brand > .icon > i { color: var(--ot-brand); }
+
+.e-7aa040a4 > .holder.green > .icon { background: var(--ot-green-opacity); }
+.e-7aa040a4 > .holder.green > .icon > i { color: var(--ot-green); }
+
+.e-7aa040a4 > .holder.orange > .icon { background: var(--ot-orange-opacity); }
+.e-7aa040a4 > .holder.orange > .icon > i { color: var(--ot-orange); }
+
+.e-7aa040a4 > .holder.blue > .icon { background: var(--ot-blue-opacity); }
+.e-7aa040a4 > .holder.blue > .icon > i { color: var(--ot-blue); }
+
+.e-7aa040a4 > .holder.red > .icon { background: var(--ot-red-opacity); }
+.e-7aa040a4 > .holder.red > .icon > i { color: var(--ot-red); }
+
+/* Body */
+
+.e-7aa040a4 > .holder > .body
+{
+	flex: 1;
+	min-width: 0;
+}
+
+.e-7aa040a4 > .holder > .body > .title
+{
+	font-size: 13.5px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	margin-bottom: 3px;
+}
+
+.e-7aa040a4 > .holder > .body > .description
+{
+	font-size: 12px;
+	color: var(--ot-text-2);
+	line-height: 1.45;
+}
+
+.e-7aa040a4 > .holder > .body > .time
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 11px;
+	color: var(--ot-text-3);
+	margin-top: 6px;
+}
+
+.e-7aa040a4 > .holder > .body > .time > i
+{
+	font-size: 13px;
+}

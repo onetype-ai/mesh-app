@@ -1,0 +1,115 @@
+/* ===== Root ===== */
+
+.e-5ce286a9
+{
+	display: block;
+	width: 100%;
+}
+
+.e-5ce286a9 > .box
+{
+	display: flex;
+	flex-direction: column;
+	background: var(--ot-bg-2);
+	border: 1px solid var(--ot-bg-2-border);
+	border-radius: var(--ot-radius-l);
+	overflow: hidden;
+}
+
+/* ===== Row ===== */
+
+.e-5ce286a9 > .box > .row
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 14px;
+	border-bottom: 1px solid var(--ot-bg-2-border);
+}
+
+.e-5ce286a9 > .box > .row:last-child
+{
+	border-bottom: none;
+}
+
+/* ===== Info ===== */
+
+.e-5ce286a9 > .box > .row > .info
+{
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.e-5ce286a9 > .box > .row > .info > .top
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.e-5ce286a9 > .box > .row > .info > .top > .label
+{
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	letter-spacing: -0.005em;
+}
+
+.e-5ce286a9 > .box > .row > .info > .top > .widget
+{
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 7px;
+	border-radius: 100px;
+	font-size: 9.5px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	background: var(--ot-bg-3);
+	border: 1px solid var(--ot-bg-3-border);
+	color: var(--ot-text-3);
+}
+
+.e-5ce286a9 > .box > .row > .info > .top > .widget.widget-number { color: var(--ot-blue); border-color: var(--ot-blue-border); background: var(--ot-blue-opacity); }
+.e-5ce286a9 > .box > .row > .info > .top > .widget.widget-badge { color: var(--ot-green); border-color: var(--ot-green-border); background: var(--ot-green-opacity); }
+.e-5ce286a9 > .box > .row > .info > .top > .widget.widget-progress { color: var(--ot-brand); border-color: var(--ot-brand-border); background: var(--ot-brand-opacity); }
+.e-5ce286a9 > .box > .row > .info > .top > .widget.widget-gauge { color: var(--ot-orange); border-color: var(--ot-orange-border); background: var(--ot-orange-opacity); }
+
+.e-5ce286a9 > .box > .row > .info > .key
+{
+	font-family: 'SF Mono', Monaco, monospace;
+	font-size: 10px;
+	color: var(--ot-text-3);
+	letter-spacing: 0.01em;
+	word-break: break-all;
+}
+
+/* ===== Value ===== */
+
+.e-5ce286a9 > .box > .row > .value
+{
+	display: flex;
+	align-items: baseline;
+	gap: 4px;
+	flex-shrink: 0;
+}
+
+.e-5ce286a9 > .box > .row > .value > .value-text
+{
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	font-variant-numeric: tabular-nums;
+}
+
+.e-5ce286a9 > .box > .row > .value > .unit
+{
+	font-size: 10px;
+	font-weight: 500;
+	color: var(--ot-text-3);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}

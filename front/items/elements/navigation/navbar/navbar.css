@@ -1,0 +1,116 @@
+/* Root */
+
+.e-45daee5a
+{
+	display: block;
+	width: 100%;
+	position: sticky;
+	top: 0;
+	z-index: 40;
+}
+
+/* Holder */
+
+.e-45daee5a > .holder
+{
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-m);
+	height: 64px;
+	padding: 0 var(--ot-spacing-l);
+	background: var(--ot-bg-2);
+	backdrop-filter: saturate(180%) blur(20px);
+	-webkit-backdrop-filter: saturate(180%) blur(20px);
+	border-bottom: 1px solid var(--ot-bg-2-border);
+}
+
+/* Crumbs */
+
+.e-45daee5a > .holder > .crumbs
+{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+.e-45daee5a > .holder > .crumbs > .crumb
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--ot-text-2);
+	transition: color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.e-45daee5a > .holder > .crumbs > .crumb:hover
+{
+	color: var(--ot-text-1);
+}
+
+.e-45daee5a > .holder > .crumbs > .crumb:last-child
+{
+	color: var(--ot-text-1);
+	font-weight: 600;
+}
+
+.e-45daee5a > .holder > .crumbs > .crumb > i
+{
+	font-size: 16px;
+	color: var(--ot-text-3);
+}
+
+.e-45daee5a > .holder > .crumbs > .crumb + .crumb::before
+{
+	content: 'chevron_right';
+	font-family: 'Material Symbols Rounded';
+	font-size: 14px;
+	color: var(--ot-text-3);
+	font-variation-settings: 'opsz' 20, 'wght' 400;
+	margin-right: -2px;
+}
+
+/* Search */
+
+.e-45daee5a > .holder > .search
+{
+	flex: 1;
+	max-width: 520px;
+	margin-left: var(--ot-spacing-s);
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.e-45daee5a > .holder > .search > .kbd
+{
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 7px;
+	background: var(--ot-bg-1);
+	border: 1px solid var(--ot-bg-1-border);
+	border-radius: 5px;
+	font-size: 10.5px;
+	font-weight: 600;
+	color: var(--ot-text-3);
+	font-family: var(--ot-font-primary);
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Right */
+
+.e-45daee5a > .holder > .right
+{
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-s);
+	flex-shrink: 0;
+}
