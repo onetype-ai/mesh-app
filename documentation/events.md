@@ -12,6 +12,17 @@ Names without the `@` prefix are Mesh events. The `@` prefix is reserved for fra
 |-----------------------|----------------------|-----------------------------------------------------------------------------------------------|
 | `servers.connect`     | `{server, stream}`   | [servers/items/servers/grpc/gateway.js](../back/addons/servers/items/servers/grpc/gateway.js) |
 | `servers.disconnect`  | `{server, stream}`   | [servers/items/servers/grpc/gateway.js](../back/addons/servers/items/servers/grpc/gateway.js) |
+| `servers.create`      | `{server}`           | [servers/functions/create.js](../back/addons/servers/functions/create.js)                     |
+| `servers.remove`      | `{server, cleanup}`  | [servers/functions/remove.js](../back/addons/servers/functions/remove.js)                     |
+
+### Middleware
+
+| Event                         | Payload              | Invoked from                                                              |
+|-------------------------------|----------------------|---------------------------------------------------------------------------|
+| `servers.create.before`       | `{server}`           | [servers/functions/create.js](../back/addons/servers/functions/create.js) |
+| `servers.create.after`        | `{server}`           | [servers/functions/create.js](../back/addons/servers/functions/create.js) |
+| `servers.remove.before`       | `{server, cleanup}`  | [servers/functions/remove.js](../back/addons/servers/functions/remove.js) |
+| `servers.remove.after`        | `{server, cleanup}`  | [servers/functions/remove.js](../back/addons/servers/functions/remove.js) |
 
 ## scripts
 

@@ -21,12 +21,15 @@ CREATE TABLE IF NOT EXISTS public.mesh_servers
     id bigint NOT NULL DEFAULT nextval('mesh_servers_id_seq'::regclass),
     team_id bigint NOT NULL,
     name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    ip character varying(45) COLLATE pg_catalog."default",
     token character varying(255) COLLATE pg_catalog."default" NOT NULL,
     is_rented boolean NOT NULL DEFAULT false,
     marketplace_id bigint,
+    scripts bigint[] NOT NULL DEFAULT '{}'::bigint[],
+    packages bigint[] NOT NULL DEFAULT '{}'::bigint[],
+    services bigint[] NOT NULL DEFAULT '{}'::bigint[],
     metrics jsonb NOT NULL DEFAULT '{}'::jsonb,
     status character varying(50) COLLATE pg_catalog."default" NOT NULL DEFAULT 'Inactive'::character varying,
+    is_initialized boolean NOT NULL DEFAULT false,
     updated_at timestamp with time zone NOT NULL DEFAULT now(),
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     deleted_at timestamp with time zone,
@@ -58,12 +61,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_mesh_servers_token
     WITH (fillfactor=100, deduplicate_items=True)
     TABLESPACE pg_default;
 
--- Index: idx_mesh_servers_ip
-
--- DROP INDEX IF EXISTS public.idx_mesh_servers_ip;
-
-CREATE INDEX IF NOT EXISTS idx_mesh_servers_ip
-    ON public.mesh_servers USING btree
-    (ip COLLATE pg_catalog."default" ASC NULLS LAST)
-    WITH (fillfactor=100, deduplicate_items=True)
-    TABLESPACE pg_default;

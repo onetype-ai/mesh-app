@@ -4,6 +4,10 @@ servers.Table('mesh_servers');
 servers.Search(['name']);
 
 import './expose.js';
+import './functions/create.js';
+import './functions/remove.js';
+import './items/commands/create.js';
+import './items/commands/remove.js';
 import './items/servers/grpc/gateway.js';
 import './events/shutdown.js';
 

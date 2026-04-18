@@ -8,6 +8,8 @@ import './events/scripts.run.js';
 import './events/scripts.approval.js';
 import './events/servers.connect.js';
 import './events/servers.disconnect.js';
+import './events/servers.create.js';
+import './events/servers.remove.js';
 import './events/packages.install.js';
 import './events/packages.uninstall.js';
 

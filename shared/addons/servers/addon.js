@@ -9,8 +9,13 @@ const servers = onetype.Addon('servers', (servers) =>
 	servers.Field('is_rented', ['boolean', false]);
 	servers.Field('marketplace_id', ['string']);
 
+	servers.Field('scripts', ['array', []]);
+	servers.Field('packages', ['array', []]);
+	servers.Field('services', ['array', []]);
+
 	servers.Field('metrics', ['object', {}]);
 	servers.Field('status', ['string', 'Inactive']);
+	servers.Field('is_initialized', ['boolean', false]);
 	servers.Field('updated_at', ['string']);
 	servers.Field('created_at', ['string']);
 	servers.Field('deleted_at', ['string']);
