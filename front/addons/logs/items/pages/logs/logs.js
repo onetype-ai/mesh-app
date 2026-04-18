@@ -11,29 +11,6 @@ onetype.AddonReady('pages', (pages) =>
 			rows: 'auto 1fr',
 			gap: '0'
 		},
-		data: async function()
-		{
-			const [logsList, serversList, scriptsList] = await Promise.all([
-				logs.Find()
-					.sort('created_at', 'desc')
-					.limit(200)
-					.many(),
-				servers.Find()
-					.select(['id', 'name'])
-					.limit(1000)
-					.many(),
-				scripts.Find()
-					.select(['id', 'name'])
-					.limit(1000)
-					.many()
-			]);
-
-			return {
-				items: logsList.map((item) => item.data),
-				servers: serversList.map((item) => item.data),
-				scripts: scriptsList.map((item) => item.data)
-			};
-		},
 		areas:
 		{
 			sidebar: function()
@@ -49,54 +26,8 @@ onetype.AddonReady('pages', (pages) =>
 
 				return `<e-navbar :crumbs="crumbs"></e-navbar>`;
 			},
-			main: function({ data })
+			main: function()
 			{
-				this.items = data.items;
-				this.servers = data.servers;
-				this.scripts = data.scripts;
-				this.refreshing = false;
-				this.alive = true;
-
-				this.fetch = async () =>
-				{
-					this.refreshing = true;
-
-					const list = await logs.Find()
-						.sort('created_at', 'desc')
-						.limit(200)
-						.many();
-
-					this.items = list.map((item) => item.data);
-					this.refreshing = false;
-				};
-
-				this.loop = async () =>
-				{
-					while(this.alive)
-					{
-						try
-						{
-							await this.fetch();
-						}
-						catch(error)
-						{
-							console.warn('Logs refresh failed:', error.message);
-						}
-
-						await new Promise((resolve) => setTimeout(resolve, 5000));
-					}
-				};
-
-				this.OnReady(() =>
-				{
-					this.loop();
-				});
-
-				this.OnDestroy(() =>
-				{
-					this.alive = false;
-				});
-
 				return /* html */ `
 					<div class="ot-container-l ot-py-l ot-flex-vertical">
 						<e-global-heading
@@ -105,12 +36,7 @@ onetype.AddonReady('pages', (pages) =>
 							size="m"
 						></e-global-heading>
 
-						<e-logs
-							:items="items"
-							:servers="servers"
-							:scripts="scripts"
-							:refreshing="refreshing"
-						></e-logs>
+						<e-logs></e-logs>
 					</div>
 				`;
 			}

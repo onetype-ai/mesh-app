@@ -4,29 +4,17 @@ onetype.AddonReady('elements', (elements) =>
 		id: 'logs',
 		config:
 		{
-			items:
+			server:
 			{
-				type: 'array',
-				value: [],
-				description: 'Log rows from logs addon.'
+				type: 'string',
+				value: '',
+				description: 'Optional server_id to scope logs to one server.'
 			},
-			servers:
+			script:
 			{
-				type: 'array',
-				value: [],
-				description: 'Servers list used to resolve server_id → name.'
-			},
-			scripts:
-			{
-				type: 'array',
-				value: [],
-				description: 'Scripts list used to resolve script_id → name.'
-			},
-			refreshing:
-			{
-				type: 'boolean',
-				value: false,
-				description: 'Whether the parent is currently fetching new logs.'
+				type: 'string',
+				value: '',
+				description: 'Optional script_id to scope logs to one script.'
 			}
 		},
 		render: function()
@@ -35,6 +23,12 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.level = 'All';
 			this.source = 'All';
+			this.items = [];
+			this.servers = [];
+			this.scripts = [];
+			this.refreshing = false;
+			this.alive = true;
+			this.generation = 0;
 
 			this.levels =
 			[
@@ -52,19 +46,103 @@ onetype.AddonReady('elements', (elements) =>
 				{ id: 'System', label: 'System', icon: 'settings' }
 			];
 
+			/* ===== FETCH ===== */
+
+			this.fetch = async () =>
+			{
+				const gen = ++this.generation;
+
+				this.refreshing = true;
+
+				const query = logs.Find().sort('created_at', 'desc').limit(200);
+
+				if(this.server)
+				{
+					query.filter('server_id', this.server);
+				}
+
+				if(this.script)
+				{
+					query.filter('script_id', this.script);
+				}
+
+				if(this.level !== 'All')
+				{
+					query.filter('level', this.level);
+				}
+
+				if(this.source !== 'All')
+				{
+					query.filter('source', this.source);
+				}
+
+				const list = await query.many();
+
+				if(gen !== this.generation)
+				{
+					return;
+				}
+
+				this.items = list.map((item) => item.data);
+				this.refreshing = false;
+			};
+
+			this.lookups = async () =>
+			{
+				const [serversList, scriptsList] = await Promise.all([
+					servers.Find().select(['id', 'name']).limit(1000).many(),
+					scripts.Find().select(['id', 'name']).limit(1000).many()
+				]);
+
+				this.servers = serversList.map((item) => item.data);
+				this.scripts = scriptsList.map((item) => item.data);
+			};
+
+			this.loop = async () =>
+			{
+				while(this.alive)
+				{
+					try
+					{
+						await this.fetch();
+					}
+					catch(error)
+					{
+						console.warn('Logs refresh failed:', error.message);
+					}
+
+					await new Promise((resolve) => setTimeout(resolve, 5000));
+				}
+			};
+
+			this.OnReady(() =>
+			{
+				this.lookups();
+				this.loop();
+			});
+
+			this.OnDestroy(() =>
+			{
+				this.alive = false;
+			});
+
 			/* ===== HANDLERS ===== */
 
 			this.changeLevel = ({ value }) =>
 			{
 				this.level = value;
+				this.items = [];
+				this.fetch();
 			};
 
 			this.changeSource = ({ value }) =>
 			{
 				this.source = value;
+				this.items = [];
+				this.fetch();
 			};
 
-			/* ===== DERIVED (from props) ===== */
+			/* ===== DERIVED ===== */
 
 			this.Compute(() =>
 			{
@@ -86,22 +164,12 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.resolveServer = (item) =>
 			{
-				return item.server_id ? (this.serversById[item.server_id] || null) : null;
+				return item.server_id ? this.serversById[item.server_id] : null;
 			};
 
 			this.resolveScript = (item) =>
 			{
-				return item.script_id ? (this.scriptsById[item.script_id] || null) : null;
-			};
-
-			this.filter = () =>
-			{
-				return this.items.filter((item) =>
-				{
-					if(this.level !== 'All' && item.level !== this.level) return false;
-					if(this.source !== 'All' && item.source !== this.source) return false;
-					return true;
-				});
+				return item.script_id ? this.scriptsById[item.script_id] : null;
 			};
 
 			this.isEmpty = () => this.items.length === 0;
@@ -146,16 +214,9 @@ onetype.AddonReady('elements', (elements) =>
 						description="Run a script or connect an agent to see events here."
 					></e-status-empty>
 
-					<e-status-empty
-						ot-if="!isEmpty() && filter().length === 0"
-						icon="filter_list_off"
-						title="No matches"
-						description="No logs match the current filters."
-					></e-status-empty>
-
-					<div ot-if="filter().length > 0" class="list">
+					<div ot-if="!isEmpty()" class="list">
 						<e-log
-							ot-for="item in filter()"
+							ot-for="item in items"
 							:item="item"
 							:server="resolveServer(item)"
 							:script="resolveScript(item)"
