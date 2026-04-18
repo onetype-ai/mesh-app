@@ -16,7 +16,8 @@
         "#servers/*": "./back/addons/servers/*",
         "#scripts/*": "./back/addons/scripts/*",
         "#approvals/*": "./back/addons/approvals/*",
-        "#packages/*": "./back/addons/packages/*"
+        "#packages/*": "./back/addons/packages/*",
+        "#logs/*": "./back/addons/logs/*"
     },
     "dependencies": {
         "@onetype/framework": "^2.0.55"

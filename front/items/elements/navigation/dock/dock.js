@@ -12,7 +12,8 @@ elements.ItemAdd({
 					{ icon: 'dns', label: 'Servers', href: '/servers' },
 					{ icon: 'deployed_code', label: 'Services', href: '/services' },
 					{ icon: 'inventory_2', label: 'Packages', href: '/packages' },
-					{ icon: 'terminal', label: 'Scripts', href: '/scripts' }
+					{ icon: 'terminal', label: 'Scripts', href: '/scripts' },
+				{ icon: 'description', label: 'Logs', href: '/logs' }
 				]
 			}
 		];

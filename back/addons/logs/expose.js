@@ -1,11 +1,12 @@
-import servers from '#shared/servers/addon.js';
+import logs from '#shared/logs/addon.js';
 
-servers.Expose({
-	filter: ['id', 'team_id'],
-	sort: ['name', 'created_at', 'updated_at'],
+logs.Expose({
+	filter: ['id', 'team_id', 'server_id', 'script_id', 'user_id', 'level', 'source'],
+	sort: ['created_at', 'updated_at'],
 	select: [
-		'id', 'team_id', 'name', 'token',
-		'metrics', 'status', 'updated_at', 'created_at'
+		'id', 'team_id', 'server_id', 'script_id', 'user_id',
+		'level', 'source', 'code', 'time', 'output',
+		'updated_at', 'created_at'
 	],
 	find: function(query)
 	{

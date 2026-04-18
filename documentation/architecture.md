@@ -1,6 +1,6 @@
 # Architecture
 
-This document covers how Mesh is put together and why. If you want the product pitch, read the [README](./README.md) first.
+This document covers how Mesh is put together and why. If you want the product pitch, read the [README](../README.md) first.
 
 ## Shape of the system
 
@@ -29,7 +29,7 @@ The control plane and gateway live in the same Node.js process. The agent is a s
 
 ## Why three RPCs
 
-The agent protocol has exactly three remote calls: `agent.register`, `agent.exec`, `agent.approve`. No more will be added. Everything that looks like it needs a new RPC is actually a new script in the marketplace.
+The agent protocol has exactly three remote calls: `agent.register`, `agent.exec`, `agent.approve`. No more will be added. Everything that looks like it needs a new RPC is actually a new script in the marketplace. Response codes and their shapes live in [codes.md](./codes.md); emits and middleware in [events.md](./events.md).
 
 **register** opens the stream. The agent presents a 64-character token. The gateway looks up the server, marks it active, wires up virtual `stream`, `exec`, and `approve` fields on the server record, and keeps the stream open.
 
@@ -49,7 +49,7 @@ A new capability is a new row, not a new release. The community can publish scri
 
 ## Data model
 
-Everything is an **addon**: a named collection of fields with items stored in PostgreSQL. The four addons that make Mesh work are [servers](./shared/addons/servers/addon.js), [scripts](./shared/addons/scripts/addon.js), [packages](./shared/addons/packages/addon.js), and [approvals](./shared/addons/approvals/addon.js).
+Everything is an **addon**: a named collection of fields with items stored in PostgreSQL. The four addons that make Mesh work are [servers](../shared/addons/servers/addon.js), [scripts](../shared/addons/scripts/addon.js), [packages](../shared/addons/packages/addon.js), and [approvals](../shared/addons/approvals/addon.js).
 
 **servers** — fleet source of truth. Each row has a token (auto-generated, 64 chars), an IP, a flat `metrics` jsonb object, and a status. Four virtual fields (`stream`, `exec`, `approve`, `intervals`) hold the live gRPC connection and helpers. Virtuals are in-memory only; they reset on process restart.
 

@@ -6,7 +6,7 @@
 
 Turn any Linux or macOS machine into a managed cloud server. Deploy services from a marketplace, get a public URL, monitor metrics live. No Cloudflare, no port forwarding, no SSH.
 
-[Install](#install) · [How it works](#how-it-works) · [Architecture](#architecture) · [Roadmap](#roadmap) · [Contributing](./CONTRIBUTING.md)
+[Install](#install) · [How it works](#how-it-works) · [Architecture](#architecture) · [Roadmap](#roadmap) · [Contributing](./documentation/contributing.md)
 
 </div>
 
@@ -48,7 +48,7 @@ Mesh has three RPCs. That is the entire agent protocol.
 | RPC | Purpose |
 |-----|---------|
 | `agent.register` | Token handshake. Gateway finds the server record, opens a stream, marks it active. |
-| `agent.exec` | Run a bash command. Returns `{stdout, stderr, code}`. Hash-gated when a passphrase is set. |
+| `agent.exec` | Run a bash command. Returns `{stdout, stderr, code}`. Hash-gated when a passphrase is set. See [codes.md](./documentation/codes.md). |
 | `agent.approve` | Add command hashes to the approved set. Gated by a passphrase that never leaves the agent. |
 
 Everything else is a **script**. Scripts are bash recipes with metadata: target platform, output format, metrics schema, optional loop interval. Packages like Docker, Git, or NVIDIA drivers are three scripts (install / uninstall / status) plus an install condition.
@@ -103,7 +103,7 @@ Mesh is built around a single rule: **your passphrase never leaves the agent**.
 
 The server can propose any bash command. The agent computes its sha256 hash and rejects anything not in its approved set. Adding hashes requires the passphrase, which lives only in agent memory and is lost on restart. The control plane can never execute an arbitrary command on your machine, even if compromised.
 
-Combined with the minimal surface (three RPCs, not two hundred endpoints), the attack surface is small enough to audit in a single sitting. Report vulnerabilities to [SECURITY.md](./SECURITY.md).
+Combined with the minimal surface (three RPCs, not two hundred endpoints), the attack surface is small enough to audit in a single sitting. Report vulnerabilities to [security.md](./documentation/security.md).
 
 ## Project status
 

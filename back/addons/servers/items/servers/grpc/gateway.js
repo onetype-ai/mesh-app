@@ -1,3 +1,4 @@
+import onetype from '@onetype/framework';
 import grpcServers from '@onetype/framework/servers/grpc';
 import servers from '#shared/servers/addon.js';
 
@@ -88,6 +89,8 @@ grpcServers.Item(
 			);
 
 			stream.server = servers.Item(item.data);
+
+			onetype.Emit('servers.connect', { server: stream.server, stream });
 			return;
 		}
 
@@ -111,6 +114,8 @@ grpcServers.Item(
 		if(stream.server)
 		{
 			console.log('Agent disconnected:', stream.server.Get('name'));
+
+			onetype.Emit('servers.disconnect', { server: stream.server, stream });
 
 			stream.server.Set('status', 'Inactive');
 			await stream.server.Update();

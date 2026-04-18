@@ -6,7 +6,7 @@ Thanks for taking the time. A few things to know before you send a pull request.
 
 Open an issue first for anything larger than a typo fix. It saves both of us from wasted work. For small fixes, skip straight to a PR.
 
-If you are new to the codebase, read [CLAUDE.md](./CLAUDE.md) first. It covers the addon model, the three RPCs, the security rules, and the design principles. The project is deliberately small; expect to read the whole backend in an afternoon.
+If you are new to the codebase, read [architecture.md](./architecture.md) first. It covers the addon model, the three RPCs, the security rules, and the design principles. The project is deliberately small; expect to read the whole backend in an afternoon.
 
 ## Development setup
 
@@ -55,7 +55,7 @@ When you do write code, keep the change contained. One addon, one domain, one PR
 
 ## Security
 
-Do not open issues for security reports. See [SECURITY.md](./SECURITY.md) for the private disclosure process.
+Do not open issues for security reports. See [security.md](./security.md) for the private disclosure process.
 
 ## License
 

@@ -8,7 +8,7 @@
 
 ## Checklist
 
-- [ ] I read [CONTRIBUTING.md](../CONTRIBUTING.md).
+- [ ] I read [contributing.md](../documentation/contributing.md).
 - [ ] The change is contained to one addon or one concern.
 - [ ] Code style matches existing files (Allman braces, tabs, whole-word names).
 - [ ] I ran `node back` locally and verified the change works.

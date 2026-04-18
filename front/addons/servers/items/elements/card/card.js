@@ -109,7 +109,7 @@ onetype.AddonReady('elements', (elements) =>
 				this.active = item.status === 'Active';
 				this.rented = item.is_rented === true;
 				this.name = item.name || '—';
-				this.ip = item.ip || '';
+				this.hostname = metrics['system.network.hostname'] || '';
 				this.osLabel = (metrics['system.os.name'] || '—') + ' ' + (metrics['system.os.version'] || '');
 				this.cpuModel = metrics['system.cpu.model'] || '—';
 				this.cpuCores = cpuCores;
@@ -149,7 +149,9 @@ onetype.AddonReady('elements', (elements) =>
 						<span :class="'dot ' + (active ? 'active' : 'inactive')"></span>
 						<div class="identity-text">
 							<h3 class="name">{{ name }}</h3>
-							<div class="ip">{{ ip }}</div>
+							<div ot-if="hostname" class="meta">
+								<span class="hostname">{{ hostname }}</span>
+							</div>
 						</div>
 					</div>
 

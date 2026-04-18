@@ -98,12 +98,24 @@
 	text-overflow: ellipsis;
 }
 
-.e-4f069784 > .box > .identity > .identity-text > .ip
+.e-4f069784 > .box > .identity > .identity-text > .meta
 {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
 	font-family: 'SF Mono', Monaco, monospace;
 	font-size: 10.5px;
 	color: var(--ot-text-3);
 	font-variant-numeric: tabular-nums;
+}
+
+.e-4f069784 > .box > .identity > .identity-text > .meta > .hostname
+{
+	color: var(--ot-text-2);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 /* ===== Specs ===== */

@@ -12,6 +12,7 @@ import '#servers/load.js';
 import '#scripts/load.js';
 import '#approvals/load.js';
 import '#packages/load.js';
+import '#logs/load.js';
 
 /* Items */
 import './items/assets/assets.js';

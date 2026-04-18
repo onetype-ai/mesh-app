@@ -11,8 +11,8 @@ scripts.Field('bash', ['string', null, true], null, (value, prevValue, item) =>
 });
 
 import './expose.js';
-import './items/functions/schema.js';
-import './items/item/functions/run.js';
+import './functions/schema.js';
+import './item/functions/run.js';
 import './items/commands/run.js';
 import './events/ready.js';
 import './events/servers.add.js';
