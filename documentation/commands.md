@@ -4,6 +4,23 @@ Mesh-specific HTTP commands. Framework commands (`commands:run`, `commands:get:*
 
 All endpoints are `POST` unless noted. Responses follow the standard envelope `{ data, message, code, time }`.
 
+## Calling commands
+
+Commands can be invoked from both `back` and `front` with the same `$ot.command()` API. The third argument switches between local execution and an HTTP call.
+
+```js
+// back — runs the command in-process
+const data = await $ot.command('packages:install', { server: '1', package: '3' });
+
+// front — same call runs in-process if the command is registered locally
+const data = await $ot.command('packages:install', { server: '1', package: '3' });
+
+// front — pass `true` to route through /api/commands/run instead
+const data = await $ot.command('packages:install', { server: '1', package: '3' }, true);
+```
+
+No `try` / `catch` is needed around command calls. Every command resolves with the same envelope shape (`{ data, message, code, time }`), and `$ot.command` throws `onetype.Error(code, message)` on non-2xx codes so the caller can handle them uniformly.
+
 ## packages
 
 ### packages:install
