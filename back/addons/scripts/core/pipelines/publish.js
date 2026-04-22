@@ -57,7 +57,7 @@ onetype.Pipeline('scripts:publish', {
 			return resolve(null, 'Looping scripts must output JSON.', 400);
 		}
 
-		if(output === 'JSON' && (!metrics || !metrics.length))
+		if(output === 'JSON' && (!metrics || typeof metrics !== 'object' || Object.keys(metrics).length === 0))
 		{
 			return resolve(null, 'JSON output scripts must declare at least one metric.', 400);
 		}

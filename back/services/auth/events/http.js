@@ -11,9 +11,6 @@ onetype.MiddlewareIntercept('servers.http.request', async (middleware) =>
         return await middleware.next();
     }
 
-    http.state.actor_ip    = http.user && http.user.ip    ? http.user.ip    : null;
-    http.state.actor_agent = http.user && http.user.agent ? http.user.agent : null;
-
     let token = onetype.CookieGet('ot_session', http.request);
 
     if(!token)

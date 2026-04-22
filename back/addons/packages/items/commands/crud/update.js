@@ -6,7 +6,7 @@ commands.Item({
 	exposed: true,
 	method: 'PUT',
 	endpoint: '/api/packages/:id',
-	in: 'package --optional --pick=id --pick=name --pick=slug --pick=description --pick=overview --pick=version --pick=script_requirements_id --pick=script_install_id --pick=script_uninstall_id --pick=script_status_id --pick=config --pick=installed_metric --pick=platforms',
+	in: 'package --optional --pick=id --pick=name --pick=slug --pick=description --pick=overview --pick=version --pick=script_requirements_id --pick=script_install_id --pick=script_uninstall_id --pick=script_status_id --pick=config --pick=installed_metric --pick=platforms --pick=is_marketplace',
 	out: 'package',
 	callback: async function(properties, resolve)
 	{
@@ -30,7 +30,7 @@ commands.Item({
 			return resolve(null, 'Package not found.', 404);
 		}
 
-		const fields = ['name', 'slug', 'description', 'overview', 'version', 'script_requirements_id', 'script_install_id', 'script_uninstall_id', 'script_status_id', 'config', 'installed_metric', 'platforms'];
+		const fields = ['name', 'slug', 'description', 'overview', 'version', 'script_requirements_id', 'script_install_id', 'script_uninstall_id', 'script_status_id', 'config', 'installed_metric', 'platforms', 'is_marketplace'];
 
 		for(const field of fields)
 		{

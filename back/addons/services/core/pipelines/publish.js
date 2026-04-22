@@ -98,19 +98,26 @@ onetype.Pipeline('services:publish', {
 			item.Get('script_status_id')
 		].filter(Boolean);
 
-		const list = await scripts.Find()
+		const all = await scripts.Find()
 			.filter('id', ids, 'IN')
 			.filter('team_id', item.Get('team_id'))
-			.filter('status', 'Published')
+			.filter('deleted_at', null, 'NULL')
 			.many();
 
-		const found = new Set(list.map((script) => script.Get('id')));
+		const byId = new Map(all.map((script) => [String(script.Get('id')), script]));
 
 		for(const id of ids)
 		{
-			if(!found.has(id))
+			const script = byId.get(String(id));
+
+			if(!script)
 			{
-				return resolve(null, 'Referenced script :id: is missing or not published.'.replace(':id:', id), 400);
+				return resolve(null, 'Referenced script ' + id + ' not found.', 400);
+			}
+
+			if(script.Get('status') !== 'Published')
+			{
+				return resolve(null, 'Script "' + script.Get('name') + '" is still Draft — publish it first.', 400);
 			}
 		}
 	}

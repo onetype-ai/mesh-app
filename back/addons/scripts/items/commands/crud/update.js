@@ -6,7 +6,7 @@ commands.Item({
 	exposed: true,
 	method: 'PUT',
 	endpoint: '/api/scripts/:id',
-	in: 'script --optional --pick=id --pick=name --pick=slug --pick=description --pick=platforms --pick=autorun --pick=loop --pick=output --pick=bash --pick=config --pick=metrics',
+	in: 'script --optional --pick=id --pick=name --pick=slug --pick=description --pick=platforms --pick=autorun --pick=loop --pick=output --pick=bash --pick=config --pick=metrics --pick=is_marketplace --pick=package_id --pick=server_id --pick=service_id',
 	out: 'script',
 	callback: async function(properties, resolve)
 	{
@@ -30,7 +30,7 @@ commands.Item({
 			return resolve(null, 'Script not found.', 404);
 		}
 
-		const fields = ['name', 'slug', 'description', 'platforms', 'autorun', 'loop', 'output', 'bash', 'config', 'metrics'];
+		const fields = ['name', 'slug', 'description', 'platforms', 'autorun', 'loop', 'output', 'bash', 'config', 'metrics', 'is_marketplace', 'package_id', 'server_id', 'service_id'];
 
 		for(const field of fields)
 		{

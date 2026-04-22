@@ -1,10 +1,11 @@
 import servers from '#shared/servers/addon.js';
 
 servers.Expose({
-	filter: ['id', 'team_id', 'status'],
+	filter: ['id', 'team_id', 'status', 'is_connected', 'is_marketplace', 'is_verified', 'is_rented'],
 	sort: ['name', 'created_at', 'updated_at'],
 	select: [
 		'id', 'team_id', 'name',
+		'has_passphrase', 'is_connected', 'is_marketplace', 'is_verified', 'is_rented',
 		'metrics', 'system_static', 'system_dynamic', 'system_refresh', 'status',
 		'updated_at', 'created_at'
 	],
