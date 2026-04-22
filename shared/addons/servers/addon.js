@@ -5,7 +5,7 @@ const servers = onetype.Addon('servers', (servers) =>
 	servers.Field('id', ['string']);
 	servers.Field('team_id', ['string', null, true]);
 	servers.Field('name', ['string', null, true]);
-	servers.Field('token', ['string', null, true]);
+	servers.Field('token', ['string']);
 
 	servers.Field('has_passphrase', ['boolean', false]);
 	servers.Field('is_connected',   ['boolean', false]);
