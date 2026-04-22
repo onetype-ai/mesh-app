@@ -68,7 +68,7 @@ onetype.AddonReady('pages', (pages) =>
 							id: server.id,
 							label: server.name,
 							icon: 'dns',
-							color: server.status === 'Active' ? 'green' : null
+							color: server.is_connected === true ? 'green' : null
 						};
 					});
 				};

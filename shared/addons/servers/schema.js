@@ -5,8 +5,11 @@ onetype.DataSchema('server', {
 	team_id: ['string'],
 	name: ['string', null, true],
 	token: ['string'],
-	is_rented: ['boolean', false],
-	marketplace_id: ['string'],
+	has_passphrase: ['boolean', false],
+	is_connected:   ['boolean', false],
+	is_marketplace: ['boolean', false],
+	is_verified:    ['boolean', false],
+	is_rented:      ['boolean', false],
 	metrics: ['object', {}],
 	system_static: ['object', {}],
 	system_dynamic: ['object', {}],
@@ -14,8 +17,8 @@ onetype.DataSchema('server', {
 	status:
 	{
 		type: 'string',
-		value: 'Inactive',
-		options: ['Active', 'Inactive']
+		value: 'Draft',
+		options: ['Draft', 'Activated']
 	},
 	updated_at: ['string'],
 	created_at: ['string'],

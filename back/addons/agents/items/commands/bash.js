@@ -25,7 +25,7 @@ commands.Item({
 
 		const query = servers.Find()
 			.filter('team_id', this.http.state.user.team.id)
-			.filter('status', 'Active')
+			.filter('is_connected', true)
 			.filter('deleted_at', null, 'NULL');
 
 		if(properties.server)

@@ -28,14 +28,14 @@ onetype.Pipeline('agents:disconnect', {
 })
 
 .Join('status', 20, {
-	description: 'Mark the server Inactive.',
+	description: 'Mark the server disconnected. Leaves status and has_passphrase as they were — those describe lifecycle / last-known config, not live presence.',
 	requires: ['agent'],
 	callback: async ({ agent }) =>
 	{
 		const server = await agent.Get('server')();
 
-		server.Set('status', 'Inactive');
-		await server.Update({ whitelist: ['status'] });
+		server.Set('is_connected', false);
+		await server.Update({ whitelist: ['is_connected'] });
 	}
 })
 

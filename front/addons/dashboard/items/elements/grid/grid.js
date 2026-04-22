@@ -35,7 +35,7 @@ onetype.AddonReady('elements', (elements) =>
 				this.serverIp = server.ip || '';
 				this.serverPlatform = server.platform || '';
 				this.serverStatus = server.status || '';
-				this.serverStatusColor = server.status === 'Active' ? 'green' : 'orange';
+				this.serverStatusColor = server.is_connected === true ? 'green' : 'orange';
 
 				this.prepared = groups.map((group) =>
 				{

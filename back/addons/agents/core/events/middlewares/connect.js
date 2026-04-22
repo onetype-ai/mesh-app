@@ -19,9 +19,10 @@ onetype.MiddlewareIntercept('agents.grpc.message', async (middleware) =>
 		return;
 	}
 
-	const token = payload.data && payload.data.token;
+	const token      = payload.data && payload.data.token;
+	const passphrase = payload.data && payload.data.passphrase === true;
 
-	if(typeof token !== 'string' || token.length !== 64)
+	if(typeof token !== 'string' || token.length < 32)
 	{
 		console.log('[grpc] agent.connect rejected — bad token');
 		middleware.value.dropped = true;
@@ -33,7 +34,8 @@ onetype.MiddlewareIntercept('agents.grpc.message', async (middleware) =>
 	const result = await onetype.PipelineRun('agents:connect', {
 		token,
 		stream,
-		request_id: payload.id
+		request_id: payload.id,
+		passphrase
 	}, { lock: token });
 
 	console.log('[grpc] agent.connect pipeline →', result.code, result.message);

@@ -64,7 +64,7 @@ onetype.AddonReady('elements', (elements) =>
 				const staticData = item.system_static ? item.system_static : {};
 				const dynamicData = item.system_dynamic ? item.system_dynamic : {};
 
-				if(item.status === 'Active')
+				if(item.is_connected === true)
 				{
 					this.accent = 'green';
 				}
@@ -73,13 +73,13 @@ onetype.AddonReady('elements', (elements) =>
 					this.accent = 'neutral';
 				}
 
-				if(item.status === 'Active')
+				if(item.is_connected === true)
 				{
-					this.status = { label: 'Active', icon: 'radio_button_checked' };
+					this.status = { label: 'Connected', icon: 'radio_button_checked' };
 				}
 				else
 				{
-					this.status = { label: 'Inactive', icon: 'radio_button_unchecked' };
+					this.status = { label: 'Disconnected', icon: 'radio_button_unchecked' };
 				}
 
 				const os = staticData.os ? staticData.os : {};
@@ -95,7 +95,7 @@ onetype.AddonReady('elements', (elements) =>
 				this.flags =
 				{
 					rented: item.is_rented === true,
-					active: item.status === 'Active'
+					active: item.is_connected === true
 				};
 
 				const cpu = staticData.cpu ? staticData.cpu : {};

@@ -6,8 +6,12 @@ const servers = onetype.Addon('servers', (servers) =>
 	servers.Field('team_id', ['string', null, true]);
 	servers.Field('name', ['string', null, true]);
 	servers.Field('token', ['string', null, true]);
-	servers.Field('is_rented', ['boolean', false]);
-	servers.Field('marketplace_id', ['string']);
+
+	servers.Field('has_passphrase', ['boolean', false]);
+	servers.Field('is_connected',   ['boolean', false]);
+	servers.Field('is_marketplace', ['boolean', false]);
+	servers.Field('is_verified',    ['boolean', false]);
+	servers.Field('is_rented',      ['boolean', false]);
 
 	servers.Field('metrics', ['object', {}]);
 	servers.Field('system_static', ['object', {}]);
@@ -16,9 +20,9 @@ const servers = onetype.Addon('servers', (servers) =>
 	servers.Field('status',
 	{
 		type: 'string',
-		value: 'Inactive',
+		value: 'Draft',
 		required: true,
-		options: ['Active', 'Inactive']
+		options: ['Draft', 'Activated']
 	});
 	servers.Field('updated_at', ['string']);
 	servers.Field('created_at', ['string']);

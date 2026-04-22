@@ -9,7 +9,8 @@ onetype.Pipeline('agents:connect', {
 	in: {
 		token: ['string', null, true],
 		stream: ['object', null, true],
-		request_id: ['string', null, true]
+		request_id: ['string', null, true],
+		passphrase: ['boolean', false]
 	}
 })
 
@@ -17,7 +18,7 @@ onetype.Pipeline('agents:connect', {
 	description: 'Token format check.',
 	callback: async ({ token }, resolve) =>
 	{
-		if(typeof token !== 'string' || token.length !== 64)
+		if(typeof token !== 'string' || token.length < 32)
 		{
 			return resolve(null, 'Invalid token.', 400);
 		}
@@ -103,12 +104,19 @@ onetype.Pipeline('agents:connect', {
 })
 
 .Join('status', 40, {
-	description: 'Mark the server Active.',
+	description: 'Mark the server connected, record has_passphrase from the agent, and promote from Draft to Activated on first successful connect.',
 	requires: ['server'],
-	callback: async ({ server }) =>
+	callback: async ({ server, passphrase }) =>
 	{
-		server.Set('status', 'Active');
-		await server.Update({ whitelist: ['status'] });
+		server.Set('is_connected', true);
+		server.Set('has_passphrase', passphrase === true);
+
+		if(server.Get('status') === 'Draft')
+		{
+			server.Set('status', 'Activated');
+		}
+
+		await server.Update({ whitelist: ['is_connected', 'has_passphrase', 'status'] });
 	},
 	rollback: async ({ server }) =>
 	{
@@ -117,8 +125,8 @@ onetype.Pipeline('agents:connect', {
 			return;
 		}
 
-		server.Set('status', 'Inactive');
-		await server.Update({ whitelist: ['status'] });
+		server.Set('is_connected', false);
+		await server.Update({ whitelist: ['is_connected'] });
 	}
 })
 

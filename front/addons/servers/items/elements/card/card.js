@@ -79,7 +79,7 @@ onetype.AddonReady('elements', (elements) =>
 				const staticData = item.system_static ? item.system_static : {};
 				const dynamicData = item.system_dynamic ? item.system_dynamic : {};
 
-				if(item.status === 'Active')
+				if(item.is_connected === true)
 				{
 					this.accent = 'green';
 				}
@@ -100,7 +100,7 @@ onetype.AddonReady('elements', (elements) =>
 
 				this.flags =
 				{
-					active: item.status === 'Active',
+					active: item.is_connected === true,
 					rented: item.is_rented === true,
 					hasSpecs: !!(staticData.cpu || staticData.ram || (staticData.disk && staticData.disk.length))
 				};

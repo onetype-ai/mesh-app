@@ -123,8 +123,8 @@ onetype.AddonReady('elements', (elements) =>
 					return {
 						id: srv.id,
 						name: srv.name,
-						status: srv.status || 'Inactive',
-						statusColor: srv.status === 'Active' ? 'green' : 'orange'
+						status: srv.status || 'Draft',
+						statusColor: srv.is_connected === true ? 'green' : 'orange'
 					};
 				});
 
