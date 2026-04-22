@@ -1,4 +1,4 @@
-/* ===== Root ===== */
+/* ===== ROOT ===== */
 
 .e-4ded73b
 {
@@ -13,18 +13,18 @@
 	gap: var(--ot-spacing-m);
 }
 
-/* ===== Toolbar ===== */
+/* ===== TOOLBAR ===== */
 
 .e-4ded73b > .box > .toolbar
 {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: var(--ot-spacing-l);
-	padding: var(--ot-spacing-m) var(--ot-spacing-l);
+	gap: var(--ot-spacing-m);
+	padding: var(--ot-spacing-s) var(--ot-spacing-m);
 	background: var(--ot-bg-2);
 	border: 1px solid var(--ot-bg-2-border);
-	border-radius: var(--ot-radius-m);
+	border-radius: var(--ot-radius-l);
 }
 
 .e-4ded73b > .box > .toolbar > .filter
@@ -35,16 +35,21 @@
 	min-width: 0;
 }
 
-.e-4ded73b > .box > .toolbar > .filter > .filter-label
+.e-4ded73b > .box > .toolbar > .filter.filter-action
 {
-	color: var(--ot-text-3);
-	font-size: 11px;
-	font-weight: 600;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
+	flex: 1;
+	min-width: 240px;
 }
 
-/* ===== Status ===== */
+.e-4ded73b > .box > .toolbar > .filter > .filter-label
+{
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--ot-text-3);
+	flex-shrink: 0;
+}
 
 .e-4ded73b > .box > .toolbar > .status
 {
@@ -52,39 +57,108 @@
 	align-items: center;
 	gap: 6px;
 	margin-left: auto;
-	color: var(--ot-text-3);
-	font-size: 11px;
-	font-weight: 500;
-	letter-spacing: 0.02em;
+	padding: 4px 10px;
+	background: var(--ot-bg-3);
+	border: 1px solid var(--ot-bg-3-border);
+	border-radius: 100px;
+	font-size: 10px;
+	font-weight: 700;
 	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--ot-text-3);
 }
 
 .e-4ded73b > .box > .toolbar > .status > .dot
 {
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
+	width: 6px;
+	height: 6px;
+	border-radius: 100px;
 	background: var(--ot-green);
-	box-shadow: 0 0 0 0 var(--ot-green-opacity);
+	box-shadow: 0 0 0 0 var(--ot-green);
+	animation: e-4ded73b-pulse-green 2s infinite;
+	transition: background var(--ot-transition);
 }
 
 .e-4ded73b > .box > .toolbar > .status > .dot.on
 {
-	animation: e-4ded73b-pulse 1.2s ease-in-out infinite;
+	background: var(--ot-orange);
+	box-shadow: 0 0 0 0 var(--ot-orange);
+	animation: e-4ded73b-pulse-orange 1s infinite;
 }
 
-@keyframes e-4ded73b-pulse
+@keyframes e-4ded73b-pulse-green
 {
-	0%   { box-shadow: 0 0 0 0 var(--ot-green-opacity); }
-	50%  { box-shadow: 0 0 0 6px var(--ot-green-opacity); }
-	100% { box-shadow: 0 0 0 0 var(--ot-green-opacity); }
+	0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+	70%  { box-shadow: 0 0 0 5px transparent; }
+	100% { box-shadow: 0 0 0 0 transparent; }
 }
 
-/* ===== List ===== */
+@keyframes e-4ded73b-pulse-orange
+{
+	0%   { box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.6); }
+	70%  { box-shadow: 0 0 0 5px transparent; }
+	100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ===== LIST ===== */
 
 .e-4ded73b > .box > .list
 {
 	display: flex;
 	flex-direction: column;
+	gap: var(--ot-spacing-m);
+}
+
+.e-4ded73b > .box > .list > .group
+{
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.e-4ded73b > .box > .list > .group.multi
+{
+	padding: var(--ot-spacing-s) 0 var(--ot-spacing-s) var(--ot-spacing-m);
+	border-left: 2px solid var(--ot-brand-border);
+	background: linear-gradient(90deg, var(--ot-brand-opacity) 0%, transparent 30%);
+	border-radius: var(--ot-radius-s) 0 0 var(--ot-radius-s);
+}
+
+.e-4ded73b > .box > .list > .group > .group-head
+{
+	display: flex;
+	align-items: center;
 	gap: 6px;
+	padding: 0 0 var(--ot-spacing-s) 0;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+.e-4ded73b > .box > .list > .group > .group-head > i
+{
+	font-size: 13px;
+	color: var(--ot-brand);
+}
+
+.e-4ded73b > .box > .list > .group > .group-head > .group-label
+{
+	color: var(--ot-brand);
+}
+
+.e-4ded73b > .box > .list > .group > .group-head > .group-id
+{
+	font-family: 'SF Mono', Monaco, monospace;
+	color: var(--ot-text-3);
+	text-transform: none;
+	letter-spacing: 0;
+	font-weight: 500;
+	font-size: 11px;
+}
+
+.e-4ded73b > .box > .list > .group > .group-head > .group-count
+{
+	margin-left: auto;
+	color: var(--ot-text-3);
 }

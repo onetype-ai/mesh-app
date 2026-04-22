@@ -1,12 +1,12 @@
 import logs from '#shared/logs/addon.js';
 
 logs.Expose({
-	filter: ['id', 'team_id', 'server_id', 'script_id', 'user_id', 'level', 'source'],
+	filter: ['id', 'team_id', 'correlation_id', 'action', 'level', 'target_type', 'target_id', 'reference_type', 'reference_id'],
 	sort: ['created_at', 'updated_at'],
 	select: [
-		'id', 'team_id', 'server_id', 'script_id', 'user_id',
-		'level', 'source', 'code', 'time', 'output',
-		'updated_at', 'created_at'
+		'id', 'team_id', 'user', 'actor_ip', 'actor_agent', 'correlation_id',
+		'action', 'level', 'target_type', 'target_id', 'reference_type', 'reference_id',
+		'code', 'time', 'output', 'hash', 'hit_count', 'updated_at', 'created_at'
 	],
 	find: function(query)
 	{
