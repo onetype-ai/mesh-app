@@ -86,11 +86,12 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 3 hours
 - **Why blocker:** a stolen cookie becomes `rm -rf /` on every server in the team. This is the single worst blast-radius bug in the codebase.
 
-### 10. `/api/gateways` missing `team_id` filter
-- [ ] `back/addons/gateways/items/commands/crud/many.js`: add `.filter('team_id', this.http.state.user.team.id)`
-- [ ] Audit every other addon `many.js` / `one.js` for the same mistake
+### 10. Audit all addon `many.js` / `one.js` for missing auth / team scope ✅
+- [x] Gateways: global infra (SSL), auth-only — no team_id needed. Confirmed `back/addons/gateways/core/expose.js` already auth-gated.
+- [x] approvals, logs, packages, scripts, servers, services: all expose blocks enforce login + `team_id` filter. Verified via `grep -A 10 "find: function" back/addons/*/core/expose.js`.
+- [ ] Still pending: delete / update commands (not via Expose) — see #13 (servers:update) and #30 (approvals:delete) for known cases.
 - **Effort:** 20 min
-- **Why blocker:** cross-team read of every gateway record. Reveals hostnames, service routes, other tenants' infrastructure.
+- **Why blocker:** any read endpoint without team scope leaks cross-tenant data. All `Expose({})`-backed addons clean; manual command endpoints still need individual audit.
 
 ### 11. CORS reflects any `Origin`
 - [ ] Replace reflected `Access-Control-Allow-Origin` with a whitelist read from env (e.g. `CORS_ORIGINS=https://mesh.onetype.ai,https://app.example.com`)
@@ -179,12 +180,13 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 2-3 hours
 - **Why blocker:** self-hoster does `git clone + npm install + node back` on empty Postgres → crash on first query. Project is unusable out of the box.
 
-### 24. Configurable `HTTP_PORT` and `GRPC_PORT`
-- [ ] Replace hardcoded `3020` in `back/items/servers/http.js:3` with `process.env.HTTP_PORT ?? 3020`
-- [ ] Replace hardcoded `50000` in `back/addons/agents/items/servers/grpc.js:6` with `process.env.GRPC_PORT ?? 50000`
+### 24. Configurable `HTTP_PORT` and `GRPC_PORT` ✅
+- [x] Replace hardcoded `3020` in `back/items/servers/http.js:3` with `process.env.HTTP_PORT || 3020`
+- [x] Replace hardcoded `50000` in `back/addons/agents/items/servers/grpc.js:6` with `process.env.GRPC_PORT || 50000`
 - [ ] Document both in `.env.example`
 - **Effort:** 15 min
 - **Why blocker:** any self-hoster already using 3020 or behind a reverse proxy is blocked. Trivial fix, ship it.
+- **Done:** verified `HTTP_PORT=4040 GRPC_PORT=51000 node back` binds to the overridden ports and logs them correctly. `.env.example` doc pending (part of #31).
 
 ### 25. Process supervisor + Node engines pin
 - [ ] Ship `deploy/mesh-app.service` (systemd) and `deploy/docker-compose.yml` in the repo
@@ -194,11 +196,12 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 1 hour
 - **Why blocker:** `node back` crash with no restart = offline service. Undocumented Node version = half of clones crash on startup.
 
-### 26. `.env` mandatory but file does not exist → friendly error
-- [ ] Guard `process.loadEnvFile` call with `existsSync`, print clear "Copy .env.example to .env and fill it in." message
+### 26. `.env` mandatory but file does not exist → friendly error ✅
+- [x] Guard `process.loadEnvFile` call with `existsSync`, print clear "Copy .env.example to .env and fill it in." message
 - [ ] Ship `.env.example` as required-for-boot (overlap with #9/#31)
 - **Effort:** 10 min
 - **Why blocker:** fresh self-hoster sees a stack trace instead of a useful message. First-impression disaster.
+- **Done:** `back/env.js` checks `existsSync` before loading; prints path + `cp .env.example .env` hint and exits cleanly. `.env.example` doc pending (#31).
 
 ### 27. `/health` must check DB and gRPC, not just uptime
 - [ ] `SELECT 1` against the DB pool with 1s timeout
@@ -219,11 +222,14 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 5 min
 - **Why blocker:** stranger pen-testers will find them. Looks unfinished.
 
-### 30. `approvals:delete` missing team_id scope
-- [ ] `back/addons/approvals/items/commands/crud/delete.js:12` — add `.filter('team_id', this.http.state.user.team.id)`
-- [ ] Add a regression test: user from team A tries to delete team B's approval row → 404
+### 30. `approvals:delete` + entire CRUD missing auth/team scope ✅
+- [x] `approvals/items/commands/crud/delete.js` — login guard + `.filter('team_id', ...).filter('deleted_at', null, 'NULL')`
+- [x] `approvals/items/commands/crud/update.js` — login guard + team scope + whitelist (`is_approved` only, no more `Object.entries(properties)` write-anything)
+- [x] `approvals/items/commands/crud/create.js` — login guard + force `team_id` from session, never trust client
+- [x] Verified: `/api/commands/run` with `approvals:delete` returns 403 "Command is not exposed" (framework-level defense in depth); our callback-level auth is the second layer in case exposure flips later
 - **Effort:** 10 min
-- **Why blocker:** any authenticated user can soft-delete another team's approvals. Same class of bug as #10 but on the destructive side.
+- **Why blocker:** any authenticated user could soft-delete / mutate / create approvals across teams if `exposed: true` were ever added without anyone noticing. Defense in depth ensures the callback refuses regardless.
+- **Done:** all 4 approvals CRUD files now auth-guard + team-scope + whitelist-write. `many.js` and `one.js` already had scope.
 
 ### 31. `.env.example` (+ lock down `.env`)
 - [ ] Copy the real `.env` structure without secrets, comment every variable

@@ -9,7 +9,16 @@ commands.Item({
 	out: 'approval',
 	callback: async function(properties, resolve)
 	{
-		const item = await approvals.Find().filter('id', properties.id).one();
+		if(!this.http.state.user)
+		{
+			return resolve(null, 'Login required.', 401);
+		}
+
+		const item = await approvals.Find()
+			.filter('id', properties.id)
+			.filter('team_id', this.http.state.user.team.id)
+			.filter('deleted_at', null, 'NULL')
+			.one();
 
 		if(!item)
 		{

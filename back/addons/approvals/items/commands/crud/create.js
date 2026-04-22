@@ -7,7 +7,15 @@ commands.Item({
 	out: 'approval',
 	callback: async function(properties, resolve)
 	{
-		const item = approvals.Item(properties);
+		if(!this.http.state.user)
+		{
+			return resolve(null, 'Login required.', 401);
+		}
+
+		const item = approvals.Item({
+			...properties,
+			team_id: this.http.state.user.team.id
+		});
 
 		await item.Create();
 

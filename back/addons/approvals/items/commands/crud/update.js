@@ -7,26 +7,35 @@ commands.Item({
 	out: 'approval',
 	callback: async function(properties, resolve)
 	{
+		if(!this.http.state.user)
+		{
+			return resolve(null, 'Login required.', 401);
+		}
+
 		if(!properties.id)
 		{
 			return resolve(null, 'Id required.', 400);
 		}
 
-		const item = await approvals.Find().filter('id', properties.id).one();
+		const item = await approvals.Find()
+			.filter('id', properties.id)
+			.filter('team_id', this.http.state.user.team.id)
+			.filter('deleted_at', null, 'NULL')
+			.one();
 
 		if(!item)
 		{
 			return resolve(null, 'Approval not found.', 404);
 		}
 
-		for(const [key, value] of Object.entries(properties))
-		{
-			if(key === 'id')
-			{
-				continue;
-			}
+		const whitelist = ['is_approved'];
 
-			item.Set(key, value);
+		for(const key of whitelist)
+		{
+			if(properties[key] !== undefined)
+			{
+				item.Set(key, properties[key]);
+			}
 		}
 
 		await item.Update();
