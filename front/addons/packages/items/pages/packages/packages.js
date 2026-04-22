@@ -73,7 +73,34 @@ onetype.AddonReady('pages', (pages) =>
 					});
 				};
 
-				this.popup = () => '<div style="padding: 16px;">Coming soon…</div>';
+				this.install = async (pkg) =>
+				{
+					const serverId = await $ot.confirm('Install ' + pkg.name, 'Enter the server ID to install this package on.', {
+						icon: 'dns',
+						input: true,
+						placeholder: 'Server ID…',
+						confirm: 'Install',
+						cancel: 'Cancel'
+					});
+
+					if(!serverId)
+					{
+						return;
+					}
+
+					const { code, message } = await $ot.command('servers:packages:install', {
+						server_id: String(serverId).trim(),
+						package_id: pkg.id
+					}, true);
+
+					if(code !== 200)
+					{
+						$ot.toast({ message, type: 'error' });
+						return;
+					}
+
+					$ot.toast({ message: pkg.name + ' installed.', type: 'success' });
+				};
 
 				return /* html */ `
 					<div class="ot-container-l ot-py-l ot-flex-vertical">
@@ -110,7 +137,7 @@ onetype.AddonReady('pages', (pages) =>
 										color="brand"
 										tone="soft"
 										size="s"
-										:ot-popup="popup"
+										:_click="() => install(item)"
 									></e-form-button>
 								</div>
 							</e-package-card>
