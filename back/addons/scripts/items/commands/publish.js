@@ -28,7 +28,7 @@ commands.Item({
 			return resolve(null, 'Script not found.', 404);
 		}
 
-		const result = await onetype.PipelineRun('scripts:publish', { id: properties.id });
+		const result = await onetype.PipelineRun('scripts:publish', { id: properties.id }, { state: this.http.state });
 
 		if(result.code !== 200)
 		{

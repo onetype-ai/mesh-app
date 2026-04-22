@@ -20,7 +20,7 @@ commands.Item({
 		const result = await onetype.PipelineRun('marketplace:import:package', {
 			package_id: properties.package_id,
 			team_id: this.http.state.user.team.id
-		});
+		}, { state: this.http.state });
 
 		if(result.code !== 200)
 		{

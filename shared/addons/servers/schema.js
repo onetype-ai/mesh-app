@@ -17,7 +17,6 @@ onetype.DataSchema('server', {
 		value: 'Inactive',
 		options: ['Active', 'Inactive']
 	},
-	is_initialized: ['boolean', false],
 	updated_at: ['string'],
 	created_at: ['string'],
 	deleted_at: ['string']

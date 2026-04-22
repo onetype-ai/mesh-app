@@ -97,7 +97,7 @@ onetype.Pipeline('servers:services:destroy', {
 
 		const result = await this.Pipeline('agents:bash', {
 			agent_id: server.Get('id'),
-			bash: destroy.Get('bash')
+			bash: destroy.Get('bash'), timeout: 1800000
 		});
 
 		if(result.code !== 0)

@@ -96,7 +96,7 @@ onetype.Pipeline('servers:packages:install', {
 
 		const result = await this.Pipeline('agents:bash', {
 			agent_id: server.Get('id'),
-			bash: install.Get('bash')
+			bash: install.Get('bash'), timeout: 1800000
 		});
 
 		if(result.code !== 0)
@@ -141,7 +141,7 @@ onetype.Pipeline('servers:packages:install', {
 		{
 			await this.Pipeline('agents:bash', {
 				agent_id: server.Get('id'),
-				bash: uninstall.Get('bash')
+				bash: uninstall.Get('bash'), timeout: 1800000
 			});
 		}
 	}

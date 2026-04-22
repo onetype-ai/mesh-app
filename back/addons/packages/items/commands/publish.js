@@ -28,7 +28,7 @@ commands.Item({
 			return resolve(null, 'Package not found.', 404);
 		}
 
-		const result = await onetype.PipelineRun('packages:publish', { id: properties.id });
+		const result = await onetype.PipelineRun('packages:publish', { id: properties.id }, { state: this.http.state });
 
 		if(result.code !== 200)
 		{

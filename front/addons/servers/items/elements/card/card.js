@@ -102,7 +102,6 @@ onetype.AddonReady('elements', (elements) =>
 				{
 					active: item.status === 'Active',
 					rented: item.is_rented === true,
-					initialized: item.is_initialized === true,
 					hasSpecs: !!(staticData.cpu || staticData.ram || (staticData.disk && staticData.disk.length))
 				};
 
@@ -230,10 +229,9 @@ onetype.AddonReady('elements', (elements) =>
 						</div>
 
 						<div class="sub">
-							<span ot-if="!flags.initialized" class="dim">Not configured</span>
-							<span ot-if="flags.initialized && identity.os" class="os">{{ identity.os }}</span>
-							<span ot-if="flags.initialized && specsLine" class="dot-sep"></span>
-							<span ot-if="flags.initialized && specsLine" class="specs-line">{{ specsLine }}</span>
+							<span ot-if="identity.os" class="os">{{ identity.os }}</span>
+							<span ot-if="identity.os && specsLine" class="dot-sep"></span>
+							<span ot-if="specsLine" class="specs-line">{{ specsLine }}</span>
 							<span ot-if="uptime" class="dot-sep"></span>
 							<span ot-if="uptime" class="uptime">
 								<i>schedule</i>

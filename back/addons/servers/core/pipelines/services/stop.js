@@ -101,7 +101,7 @@ onetype.Pipeline('servers:services:stop', {
 
 		const result = await this.Pipeline('agents:bash', {
 			agent_id: server.Get('id'),
-			bash: stop.Get('bash')
+			bash: stop.Get('bash'), timeout: 1800000
 		});
 
 		if(result.code !== 0)

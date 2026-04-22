@@ -21,7 +21,7 @@ commands.Item({
 			server_id: properties.server_id,
 			service_id: properties.service_id,
 			team_id: this.http.state.user.team.id
-		});
+		}, { state: this.http.state });
 
 		if(result.code !== 200)
 		{

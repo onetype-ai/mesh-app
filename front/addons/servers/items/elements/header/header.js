@@ -64,11 +64,7 @@ onetype.AddonReady('elements', (elements) =>
 				const staticData = item.system_static ? item.system_static : {};
 				const dynamicData = item.system_dynamic ? item.system_dynamic : {};
 
-				if(!item.is_initialized)
-				{
-					this.accent = 'orange';
-				}
-				else if(item.status === 'Active')
+				if(item.status === 'Active')
 				{
 					this.accent = 'green';
 				}
@@ -77,11 +73,7 @@ onetype.AddonReady('elements', (elements) =>
 					this.accent = 'neutral';
 				}
 
-				if(!item.is_initialized)
-				{
-					this.status = { label: 'Not configured', icon: 'rocket_launch' };
-				}
-				else if(item.status === 'Active')
+				if(item.status === 'Active')
 				{
 					this.status = { label: 'Active', icon: 'radio_button_checked' };
 				}
@@ -103,7 +95,6 @@ onetype.AddonReady('elements', (elements) =>
 				this.flags =
 				{
 					rented: item.is_rented === true,
-					initialized: item.is_initialized === true,
 					active: item.status === 'Active'
 				};
 

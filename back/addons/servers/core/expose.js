@@ -5,7 +5,7 @@ servers.Expose({
 	sort: ['name', 'created_at', 'updated_at'],
 	select: [
 		'id', 'team_id', 'name', 'token',
-		'metrics', 'system_static', 'system_dynamic', 'system_refresh', 'status', 'is_initialized',
+		'metrics', 'system_static', 'system_dynamic', 'system_refresh', 'status',
 		'updated_at', 'created_at'
 	],
 	find: function(query)

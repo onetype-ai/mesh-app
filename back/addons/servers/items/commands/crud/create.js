@@ -26,7 +26,7 @@ commands.Item({
 			scripts: properties.scripts,
 			packages: properties.packages,
 			services: properties.services
-		});
+		}, { state: this.http.state });
 
 		if(result.code !== 200)
 		{

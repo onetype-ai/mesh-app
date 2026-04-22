@@ -96,7 +96,7 @@ onetype.Pipeline('servers:services:deploy', {
 
 		const result = await this.Pipeline('agents:bash', {
 			agent_id: server.Get('id'),
-			bash: deploy.Get('bash')
+			bash: deploy.Get('bash'), timeout: 1800000
 		});
 
 		if(result.code !== 0)
@@ -141,7 +141,7 @@ onetype.Pipeline('servers:services:deploy', {
 		{
 			await this.Pipeline('agents:bash', {
 				agent_id: server.Get('id'),
-				bash: destroy.Get('bash')
+				bash: destroy.Get('bash'), timeout: 1800000
 			});
 		}
 	}

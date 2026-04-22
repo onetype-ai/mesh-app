@@ -20,7 +20,6 @@ const servers = onetype.Addon('servers', (servers) =>
 		required: true,
 		options: ['Active', 'Inactive']
 	});
-	servers.Field('is_initialized', ['boolean', false]);
 	servers.Field('updated_at', ['string']);
 	servers.Field('created_at', ['string']);
 	servers.Field('deleted_at', ['string']);

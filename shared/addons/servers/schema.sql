@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS public.mesh_servers
     services bigint[] NOT NULL DEFAULT '{}'::bigint[],
     metrics jsonb NOT NULL DEFAULT '{}'::jsonb,
     status character varying(50) COLLATE pg_catalog."default" NOT NULL DEFAULT 'Inactive'::character varying,
-    is_initialized boolean NOT NULL DEFAULT false,
     updated_at timestamp with time zone NOT NULL DEFAULT now(),
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     deleted_at timestamp with time zone,

@@ -97,7 +97,7 @@ onetype.Pipeline('servers:packages:uninstall', {
 
 		const result = await this.Pipeline('agents:bash', {
 			agent_id: server.Get('id'),
-			bash: uninstall.Get('bash')
+			bash: uninstall.Get('bash'), timeout: 1800000
 		});
 
 		if(result.code !== 0)
