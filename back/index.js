@@ -17,6 +17,7 @@ import '#logs/load.js';
 import '#gateways/load.js';
 import '#services/load.js';
 import '#marketplace/load.js';
+import '#terminal/load.js';
 
 /* Items */
 import './items/assets/assets.js';

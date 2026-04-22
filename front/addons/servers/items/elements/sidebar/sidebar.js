@@ -55,6 +55,7 @@ onetype.AddonReady('elements', (elements) =>
 						placement: 'bottom',
 						items:
 						[
+							{ icon: 'terminal', label: 'Terminal', href: base + '/terminal' },
 							{ icon: 'description', label: 'Logs', href: base + '/logs' },
 							{ icon: 'settings', label: 'Settings', href: base + '/settings' }
 						]

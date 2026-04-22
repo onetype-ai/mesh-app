@@ -7,67 +7,64 @@ grpcServers.Item(
 	onStart: function()
 	{
 		console.log('[grpc] gateway listening on :50000');
+
+		onetype.Emit('agents.grpc.start', { item: this });
 	},
-	onStreamConnect: function(stream)
+
+	onStreamConnect: async function(stream)
 	{
 		console.log('[grpc] stream connected', stream.id);
+
+		const middleware = await onetype.Middleware('agents.grpc.connect', { stream, dropped: false });
+
+		if(middleware.value.dropped)
+		{
+			stream.end();
+			return;
+		}
+
+		onetype.Emit('agents.grpc.connect', { stream });
 	},
+
 	onStreamData: async function(stream, payload)
 	{
 		console.log('[grpc] <-', stream.id, payload.type + (payload.name ? ' ' + payload.name : ''), 'id=' + payload.id);
 
-		/* ===== Guard: only handle requests ===== */
-		if(payload.type !== 'request')
+		const middleware = await onetype.Middleware('agents.grpc.message', { stream, payload, dropped: false });
+
+		if(middleware.value.dropped)
 		{
 			return;
 		}
 
-		/* ===== RPC: agent.connect ===== */
-		if(payload.name === 'agent.connect')
+		onetype.Emit('agents.grpc.message', { stream, payload });
+
+		if(payload.type === 'event')
 		{
-			const token = payload.data.token;
-
-			if(typeof token !== 'string' || token.length !== 64)
-			{
-				console.log('[grpc] agent.connect rejected — bad token');
-				stream.respond({}, 'Invalid token.', 400, true, payload.id);
-				stream.end();
-				return;
-			}
-
-			const result = await onetype.PipelineRun('agents:connect', { token, stream, request_id: payload.id }, { lock: token });
-			console.log('[grpc] agent.connect pipeline →', result.code, result.message);
-		}
-
-		/* ===== Fallback: unknown rpc ===== */
-		else
-		{
-			console.log('[grpc] unknown rpc', payload.name);
-			stream.respond({}, 'Unknown rpc: ' + payload.name, 400, true, payload.id);
+			onetype.Emit('agents.grpc.event', { stream, payload, name: payload.name });
 		}
 	},
 
 	onError: function(message)
 	{
 		console.error('[grpc] gateway error', message);
+
+		onetype.Emit('agents.grpc.fatal', { message });
+
 		throw onetype.Error(500, 'Gateway error: :message:.', { message });
 	},
 
 	onStreamError: function(stream, message)
 	{
 		console.error('[grpc] stream error', stream.id, message);
+
+		onetype.Emit('agents.grpc.error', { stream, message });
 	},
 
-	onStreamEnd: async function(stream)
+	onStreamEnd: function(stream)
 	{
 		console.log('[grpc] stream ended', stream.id, 'agent_id=', stream.agent_id);
 
-		if(!stream.agent_id)
-		{
-			return;
-		}
-
-		const result = await onetype.PipelineRun('agents:disconnect', { agent_id: stream.agent_id, end: false });
-		console.log('[grpc] agent.disconnect pipeline →', result.code, result.message);
+		onetype.Emit('agents.grpc.disconnect', { stream });
 	}
 });

@@ -18,6 +18,7 @@ elements.ItemAdd({
 		];
 
 		const bottom = [
+			{ icon: 'terminal', label: 'Terminal', href: '/terminal' },
 			{ icon: 'description', label: 'Logs', href: '/logs' }
 		];
 

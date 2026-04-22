@@ -21,7 +21,8 @@
         "#logs/*": "./back/addons/logs/*",
         "#gateways/*": "./back/addons/gateways/*",
         "#services/*": "./back/addons/services/*",
-        "#marketplace/*": "./back/addons/marketplace/*"
+        "#marketplace/*": "./back/addons/marketplace/*",
+        "#terminal/*": "./back/addons/terminal/*"
     },
     "dependencies": {
         "@onetype/framework": "^2.0.55"

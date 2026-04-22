@@ -1,0 +1,227 @@
+/* ===== ROOT ===== */
+
+.e-1d27a92
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.e-1d27a92 > .box
+{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background: var(--ot-bg-1);
+	overflow: hidden;
+}
+
+/* ===== BAR ===== */
+
+.e-1d27a92 > .box > .notice
+{
+	display: flex;
+	align-items: flex-start;
+	gap: var(--ot-spacing-s);
+	padding: var(--ot-spacing-s) var(--ot-spacing-m);
+	background: var(--ot-bg-2);
+	border-bottom: 1px solid var(--ot-bg-2-border);
+	flex-shrink: 0;
+}
+
+.e-1d27a92 > .box > .notice > i
+{
+	font-size: 16px;
+	color: var(--ot-brand);
+	flex-shrink: 0;
+	margin-top: 1px;
+}
+
+.e-1d27a92 > .box > .notice > .notice-text
+{
+	font-size: 11.5px;
+	line-height: 1.5;
+	color: var(--ot-text-2);
+}
+
+.e-1d27a92 > .box > .notice > .notice-text > strong
+{
+	color: var(--ot-text-1);
+	font-weight: 600;
+	margin-right: 4px;
+}
+
+.e-1d27a92 > .box > .notice > .notice-text > code
+{
+	font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+	font-size: 10.5px;
+	padding: 1px 5px;
+	background: var(--ot-bg-3);
+	border: 1px solid var(--ot-bg-3-border);
+	border-radius: var(--ot-radius-s);
+	color: var(--ot-orange);
+}
+
+.e-1d27a92 > .box > .bar
+{
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-s);
+	padding: var(--ot-spacing-s) var(--ot-spacing-l);
+	background: var(--ot-bg-1);
+	border-bottom: 1px solid var(--ot-bg-1-border);
+	flex-shrink: 0;
+}
+
+.e-1d27a92 > .box > .bar > .count
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--ot-text-3);
+	letter-spacing: 0.02em;
+	margin-right: auto;
+}
+
+.e-1d27a92 > .box > .bar > .count::before
+{
+	content: '';
+	width: 6px;
+	height: 6px;
+	border-radius: 100px;
+	background: var(--ot-green);
+	box-shadow: 0 0 10px var(--ot-green-opacity);
+	animation: e-1d27a92-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes e-1d27a92-pulse
+{
+	0%, 100% { opacity: 1; }
+	50%      { opacity: 0.35; }
+}
+
+/* ===== SCREEN ===== */
+
+.e-1d27a92 > .box > .screen
+{
+	flex: 1;
+	overflow-y: auto;
+	background: var(--ot-bg-1);
+	display: flex;
+	flex-direction: column;
+	scrollbar-gutter: stable;
+}
+
+/* Empty state fills the screen vertically and centers */
+
+.e-1d27a92 > .box > .screen > .e-status-empty
+{
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ===== STREAM ===== */
+
+.e-1d27a92 > .box > .screen > .stream
+{
+	padding: var(--ot-spacing-m) 0;
+}
+
+.e-1d27a92 > .box > .screen > .stream > .line
+{
+	display: grid;
+	grid-template-columns: max-content max-content 1fr;
+	gap: var(--ot-spacing-m);
+	padding: 2px var(--ot-spacing-l);
+	font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+	font-size: 12.5px;
+	line-height: 1.7;
+	color: var(--ot-text-1);
+	white-space: pre-wrap;
+	word-break: break-word;
+	transition: background 80ms ease;
+}
+
+.e-1d27a92 > .box > .screen > .stream > .line:hover
+{
+	background: var(--ot-bg-2-opacity);
+}
+
+.e-1d27a92 > .box > .screen > .stream > .line > .time
+{
+	color: var(--ot-text-3);
+	font-size: 10.5px;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	padding-top: 3px;
+	user-select: none;
+	opacity: 0.7;
+}
+
+.e-1d27a92 > .box > .screen > .stream > .line > .server
+{
+	color: var(--ot-orange);
+	font-size: 10.5px;
+	font-weight: 600;
+	padding-top: 3px;
+	letter-spacing: 0.02em;
+	user-select: none;
+}
+
+.e-1d27a92 > .box > .screen > .stream > .line > .output
+{
+	color: var(--ot-text-1);
+	min-width: 0;
+	opacity: 0.92;
+}
+
+/* ===== PROMPT ===== */
+
+.e-1d27a92 > .box > .prompt
+{
+	display: flex;
+	align-items: flex-start;
+	gap: var(--ot-spacing-s);
+	padding: var(--ot-spacing-s);
+	background: var(--ot-bg-2);
+	border-top: 1px solid var(--ot-bg-2-border);
+	flex-shrink: 0;
+	transition: background var(--ot-transition-fast);
+}
+
+.e-1d27a92 > .box > .prompt:focus-within
+{
+	background: var(--ot-bg-2-hover);
+}
+
+.e-1d27a92 > .box > .prompt textarea
+{
+	font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace !important;
+	font-size: 13px !important;
+	line-height: 1.6 !important;
+}
+
+.e-1d27a92 > .box > .prompt > .prompt-spin
+{
+	display: inline-flex;
+	align-items: center;
+	color: var(--ot-brand);
+	align-self: center;
+	flex-shrink: 0;
+}
+
+.e-1d27a92 > .box > .prompt > .prompt-spin > i
+{
+	font-size: 18px;
+	animation: e-1d27a92-spin 0.8s linear infinite;
+}
+
+@keyframes e-1d27a92-spin
+{
+	to { transform: rotate(360deg); }
+}

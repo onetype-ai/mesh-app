@@ -47,7 +47,8 @@ onetype.Pipeline('agents:metrics.static', {
 	{
 		const { stdout } = await this.Pipeline('agents:bash', {
 			agent_id,
-			bash: script
+			bash: script,
+			terminal: false
 		});
 
 		return { stdout };

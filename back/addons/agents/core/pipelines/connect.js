@@ -85,7 +85,7 @@ onetype.Pipeline('agents:connect', {
 				return item;
 			},
 			stream: () => stream,
-			bash: (command, passphrase) => stream.request('agent.bash', { command, passphrase }, null, null, 1800000),
+			bash: (command, passphrase, terminal = true, timeout = 120000) => stream.request('agent.bash', { command, passphrase, terminal, timeout }, null, null, timeout + 5000),
 			approve: (hashes, passphrase) => stream.request('agent.approve', { hashes, passphrase })
 		});
 
