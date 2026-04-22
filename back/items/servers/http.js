@@ -1,9 +1,9 @@
 import commands from '@onetype/framework/commands';
 
-commands.Fn('http.server', 3020, {
+commands.Fn('http.server', process.env.HTTP_PORT || 3020, {
     onStart: () =>
     {
-        console.log('Travel running on :3020');
+        console.log('HTTP server listening on :' + (process.env.HTTP_PORT || 3020));
     },
     onRequest: (http) =>
     {

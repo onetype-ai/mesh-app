@@ -30,17 +30,17 @@ commands.Item({
 			return resolve(null, 'Server not found.', 404);
 		}
 
-		for(const [key, value] of Object.entries(properties))
-		{
-			if(key === 'id')
-			{
-				continue;
-			}
+		const fields = ['name', 'system_refresh'];
 
-			item.Set(key, value);
+		for(const field of fields)
+		{
+			if(properties[field] !== undefined)
+			{
+				item.Set(field, properties[field]);
+			}
 		}
 
-		await item.Update();
+		await item.Update({ whitelist: fields });
 
 		resolve(item.GetData());
 	}

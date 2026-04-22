@@ -8,7 +8,6 @@ elements.ItemAdd({
 			{
 				placement: 'top',
 				items: [
-					{ icon: 'grid_view', label: 'Dashboard', href: '/', match: '/' },
 					{ icon: 'dns', label: 'Servers', href: '/servers' },
 					{ icon: 'deployed_code', label: 'Services', href: '/services' },
 					{ icon: 'inventory_2', label: 'Packages', href: '/packages' },

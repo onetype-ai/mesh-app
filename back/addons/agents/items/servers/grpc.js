@@ -3,10 +3,10 @@ import grpcServers from '@onetype/framework/servers/grpc';
 
 grpcServers.Item(
 {
-	port: 50000,
+	port: process.env.GRPC_PORT || 50000,
 	onStart: function()
 	{
-		console.log('[grpc] gateway listening on :50000');
+		console.log('[grpc] gateway listening on :' + (process.env.GRPC_PORT || 50000));
 
 		onetype.Emit('agents.grpc.start', { item: this });
 	},

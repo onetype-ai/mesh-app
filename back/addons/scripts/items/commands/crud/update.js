@@ -6,7 +6,7 @@ commands.Item({
 	exposed: true,
 	method: 'PUT',
 	endpoint: '/api/scripts/:id',
-	in: 'script --optional --skip=team_id --skip=hash --skip=status --skip=is_verified --skip=updated_at --skip=created_at --skip=deleted_at',
+	in: 'script --optional --pick=id --pick=name --pick=slug --pick=description --pick=platforms --pick=autorun --pick=loop --pick=output --pick=bash --pick=config --pick=metrics',
 	out: 'script',
 	callback: async function(properties, resolve)
 	{
@@ -30,19 +30,19 @@ commands.Item({
 			return resolve(null, 'Script not found.', 404);
 		}
 
-		for(const [key, value] of Object.entries(properties))
-		{
-			if(key === 'id')
-			{
-				continue;
-			}
+		const fields = ['name', 'slug', 'description', 'platforms', 'autorun', 'loop', 'output', 'bash', 'config', 'metrics'];
 
-			item.Set(key, value);
+		for(const field of fields)
+		{
+			if(properties[field] !== undefined)
+			{
+				item.Set(field, properties[field]);
+			}
 		}
 
 		item.Set('is_verified', false);
 
-		await item.Update();
+		await item.Update({ whitelist: [...fields, 'is_verified'] });
 
 		resolve(item.GetData());
 	}

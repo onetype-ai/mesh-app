@@ -6,7 +6,7 @@ commands.Item({
 	exposed: true,
 	method: 'PUT',
 	endpoint: '/api/services/:id',
-	in: 'service --optional --skip=team_id --skip=status --skip=is_verified --skip=updated_at --skip=created_at --skip=deleted_at',
+	in: 'service --optional --pick=id --pick=name --pick=slug --pick=description --pick=overview --pick=version --pick=script_requirements_id --pick=script_deploy_id --pick=script_start_id --pick=script_stop_id --pick=script_restart_id --pick=script_destroy_id --pick=script_status_id --pick=config --pick=deployed_metric --pick=running_metric --pick=platforms',
 	out: 'service',
 	callback: async function(properties, resolve)
 	{
@@ -30,19 +30,19 @@ commands.Item({
 			return resolve(null, 'Service not found.', 404);
 		}
 
-		for(const [key, value] of Object.entries(properties))
-		{
-			if(key === 'id')
-			{
-				continue;
-			}
+		const fields = ['name', 'slug', 'description', 'overview', 'version', 'script_requirements_id', 'script_deploy_id', 'script_start_id', 'script_stop_id', 'script_restart_id', 'script_destroy_id', 'script_status_id', 'config', 'deployed_metric', 'running_metric', 'platforms'];
 
-			item.Set(key, value);
+		for(const field of fields)
+		{
+			if(properties[field] !== undefined)
+			{
+				item.Set(field, properties[field]);
+			}
 		}
 
 		item.Set('is_verified', false);
 
-		await item.Update();
+		await item.Update({ whitelist: [...fields, 'is_verified'] });
 
 		resolve(item.GetData());
 	}

@@ -106,11 +106,14 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 1-2 hours
 - **Why blocker:** authed user can sort/filter on `token`, `password`, `passphrase`, etc., and exfiltrate secrets via blind response-size/row-count side channel.
 
-### 13. `servers:update` whitelist enforced by iteration, not schema
-- [ ] In `back/addons/servers/items/commands/crud/update.js`, iterate over the `--pick` whitelist explicitly — not `Object.entries(properties)`
-- [ ] Same audit on every `*/crud/update.js` in the codebase
+### 13. `servers:update` whitelist enforced by iteration, not schema ✅
+- [x] In `back/addons/servers/items/commands/crud/update.js`, iterate over explicit `fields` array — not `Object.entries(properties)`
+- [x] Same fix applied to `scripts/packages/services/items/commands/crud/update.js`
+- [x] All four addons switched from `--skip` (blacklist) to `--pick` (explicit whitelist) — new fields are now default-denied, not default-allowed
+- [x] Added `Update({ whitelist })` as second-layer enforcement at the DB layer
 - **Effort:** 30 min
 - **Why blocker:** if `--pick` is ever widened or a framework change lets extras through, `token`/`team_id`/`status` become writable from the wire. Privilege escalation waiting to happen.
+- **Done:** `grep Object.entries\(properties\)` returns 0 hits in back/. All four update commands now iterate an explicit whitelist.
 
 ### 14. `marketplace:import:*` does not hard-gate `is_marketplace=true`
 - [ ] Inside `marketplace:import:script/package/service` pipelines, first join must filter `.filter('is_marketplace', true).filter('status', 'Published')` and refuse with 404 otherwise
