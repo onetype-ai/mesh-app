@@ -1,0 +1,8 @@
+.p-27291bfc
+{
+    padding: var(--ot-spacing-m);
+    display: block!important;
+    height: 100%;
+    background: var(--ot-bg-2);
+    border-left: 1px solid var(--ot-bg-2-border);
+}

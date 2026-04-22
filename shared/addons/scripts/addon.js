@@ -4,12 +4,13 @@ const scripts = onetype.Addon('scripts', (scripts) =>
 {
 	scripts.Table('mesh_scripts');
 
-	scripts.Field('id', ['string', null, true]);
+	scripts.Field('id', ['string']);
 	scripts.Field('team_id', ['string', null, true]);
 	scripts.Field('service_id', ['string']);
 	scripts.Field('server_id', ['string']);
 	scripts.Field('package_id', ['string']);
 	scripts.Field('name', ['string']);
+	scripts.Field('slug', ['string']);
 	scripts.Field('description', ['string']);
 
 	scripts.Field('status',
@@ -27,75 +28,35 @@ const scripts = onetype.Addon('scripts', (scripts) =>
 		each:
 		{
 			type: 'string',
-			options: ['*', 'linux', 'darwin']
+			options: ['*', 'Linux', 'Darwin']
 		}
 	});
 
 	scripts.Field('is_marketplace', ['boolean', false]);
-	scripts.Field('is_global', ['boolean', false]);
+	scripts.Field('is_verified', ['boolean', false]);
 	scripts.Field('autorun', ['boolean', false]);
 	scripts.Field('loop', ['number']);
 
 	scripts.Field('output',
 	{
 		type: 'string',
-		value: 'raw',
-		options: ['raw', 'json']
+		value: 'Raw',
+		options: ['Raw', 'JSON']
 	});
 
 	scripts.Field('bash', ['string', null, true]);
 	scripts.Field('hash', ['string']);
+	scripts.Field('config', ['object', {}]);
 
-	scripts.Field('metrics',
-	{
-		type: 'array',
-		value: [],
-		each:
-		{
-			type: 'object',
-			config:
-			{
-				id: ['string', null, true],
-				label: ['string'],
-				description: ['string'],
-				widget:
-				{
-					type: 'string',
-					value: 'text',
-					required: true,
-					options: ['text', 'number', 'progress', 'badge', 'gauge', 'line', 'list']
-				},
-				unit:
-				{
-					type: 'string',
-					options: ['', '%', 'ms', 's', 'bytes', 'KB', 'MB', 'GB', 'TB', 'count', 'req/s', 'ops/s']
-				},
-				value:
-				{
-					type: 'string',
-					value: 'scalar',
-					options: ['scalar', 'object', 'array']
-				},
-				key: ['string', null, true],
-				fields:
-				{
-					type: 'array',
-					value: [],
-					each:
-					{
-						type: 'object',
-						config:
-						{
-							key: ['string', null, true],
-							label: ['string'],
-							unit: ['string']
-						}
-					}
-				},
-				states: ['object', {}]
-			}
-		}
-	});
+	scripts.Field('updated_at', ['string']);
+	scripts.Field('created_at', ['string']);
+	scripts.Field('deleted_at', ['string']);
+
+	scripts.Field('metrics', ['object', {}]);
 });
+
+import './core/schemas/metrics.js';
+import './core/schemas/config.js';
+import './core/schemas/script.js';
 
 export default scripts;

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -e
+
+os_name=""
+os_version=""
+kernel="$(uname -r)"
+arch="$(uname -m)"
+cpu_model=""
+cpu_cores=0
+cpu_threads=0
+ram_total=0
+hostname="$(hostname)"
+mac=""
+disk_json="[]"
+gpu_json="[]"
+
+if [ "$(uname -s)" = "Darwin" ]; then
+	os_name="macOS"
+	os_version="$(sw_vers -productVersion)"
+	cpu_model="$(sysctl -n machdep.cpu.brand_string)"
+	cpu_cores="$(sysctl -n hw.physicalcpu)"
+	cpu_threads="$(sysctl -n hw.logicalcpu)"
+	ram_total="$(sysctl -n hw.memsize)"
+	mac="$(ifconfig en0 2>/dev/null | awk '/ether/ {print $2}')"
+
+	disk_json="$(df -kP | awk 'NR>1 && $1 ~ /^\/dev\// { dev=$1; sub(/s[0-9]+.*$/,"",dev); total[dev]=$2*1024 } END { first=1; printf "["; for (d in total) { if (!first) printf ","; printf "{\"device\":\"%s\",\"total\":%s}", d, total[d]; first=0 } printf "]" }')"
+
+elif [ "$(uname -s)" = "Linux" ]; then
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		os_name="${NAME:-Linux}"
+		os_version="${VERSION_ID:-}"
+	else
+		os_name="Linux"
+	fi
+	cpu_model="$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ *//')"
+	cpu_cores="$(grep -c '^processor' /proc/cpuinfo)"
+	cpu_threads="$cpu_cores"
+	ram_total="$(awk '/MemTotal/ { print $2 * 1024 }' /proc/meminfo)"
+
+	primary_iface=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}')
+	[ -n "$primary_iface" ] && mac="$(cat /sys/class/net/$primary_iface/address 2>/dev/null)"
+
+	disk_json="$(lsblk -bno NAME,SIZE,TYPE | awk '$3=="disk" { if(first) printf ","; else printf "["; printf "{\"device\":\"/dev/%s\",\"total\":%s}", $1, $2; first=1 } END { if(first) printf "]"; else printf "[]" }')"
+
+	if command -v nvidia-smi >/dev/null 2>&1; then
+		gpu_json="$(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader,nounits | awk -F', ' '{ if(first) printf ","; else printf "["; printf "{\"model\":\"%s\",\"vram\":%d,\"driver\":\"%s\"}", $1, $2, $3; first=1 } END { if(first) printf "]"; else printf "[]" }')"
+	fi
+fi
+
+cat <<JSON
+{
+	"os": {
+		"name": "$os_name",
+		"version": "$os_version",
+		"kernel": "$kernel"
+	},
+	"arch": "$arch",
+	"cpu": {
+		"model": "$cpu_model",
+		"cores": $cpu_cores,
+		"threads": $cpu_threads
+	},
+	"ram": {
+		"total": $ram_total
+	},
+	"disk": $disk_json,
+	"gpu": $gpu_json,
+	"network": {
+		"hostname": "$hostname",
+		"mac": "$mac"
+	}
+}
+JSON

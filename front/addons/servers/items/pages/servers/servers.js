@@ -11,35 +11,6 @@ onetype.AddonReady('pages', (pages) =>
 			rows: 'auto 1fr',
 			gap: '0'
 		},
-		data: async function()
-		{
-			const items = await servers.Find()
-				.sort('created_at', 'desc')
-				.limit(1000)
-				.many();
-
-			return { items: items.map((item) => item.data) };
-		},
-		onEnter: function()
-		{
-			// this.interval = setInterval(async () =>
-			// {
-			// 	const items = await servers.Find()
-			// 		.sort('created_at', 'desc')
-			// 		.limit(1000)
-			// 		.many();
-
-			// 	onetype.Emit('servers.refresh', items.map((item) => item.data));
-			// }, 10000);
-		},
-		onLeave: function()
-		{
-			// if(this.interval)
-			// {
-			// 	clearInterval(this.interval);
-			// 	this.interval = null;
-			// }
-		},
 		areas:
 		{
 			sidebar: function()
@@ -55,14 +26,29 @@ onetype.AddonReady('pages', (pages) =>
 
 				return `<e-navbar :crumbs="crumbs"></e-navbar>`;
 			},
-			main: function({ data })
+			main: function()
 			{
-				this.items = data.items;
+				this.items = [];
 
-				this.On('servers.refresh', (items) =>
+				this.refresh = async () =>
 				{
-					console.log(items);
-					this.items = items;
+					const items = await servers.Find()
+						.sort('created_at', 'desc')
+						.limit(1000)
+						.many();
+
+					this.items = items.map((item) => item.data);
+				};
+
+				this.OnReady(() => 
+				{
+					this.refresh();
+					this.interval = setInterval(this.refresh, 10000);
+				});
+
+				this.OnDestroy(() =>
+				{
+					clearInterval(this.interval);
 				});
 
 				return /* html */ `
@@ -81,7 +67,9 @@ onetype.AddonReady('pages', (pages) =>
 						></e-status-empty>
 
 						<div ot-if="items.length > 0" class="ot-flex-vertical ot-gap-m">
-							<e-server-card ot-for="item in items" :item="item"></e-server-card>
+							<a ot-for="item in items" :href="'/servers/' + item.id">
+								<e-server-card :item="item"></e-server-card>
+							</a>
 						</div>
 					</div>
 				`;

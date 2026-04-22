@@ -1,0 +1,17 @@
+import services from '#shared/services/addon.js';
+
+services.Table('mesh_services');
+services.Search(['name']);
+
+import './core/expose.js';
+import './items/commands/crud/create.js';
+import './items/commands/crud/update.js';
+import './items/commands/crud/delete.js';
+import './items/commands/crud/one.js';
+import './items/commands/crud/many.js';
+import './items/commands/publish.js';
+import './items/commands/unpublish.js';
+import './core/pipelines/publish.js';
+import './core/pipelines/duplicate.js';
+
+export default services;

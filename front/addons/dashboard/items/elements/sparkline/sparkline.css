@@ -1,0 +1,59 @@
+.e-5aac217e { display: block; }
+
+.e-5aac217e .spark
+{
+	width: 100%;
+	height: 36px;
+}
+
+.e-5aac217e .chart
+{
+	width: 100%;
+	height: 100%;
+	display: block;
+	overflow: visible;
+}
+
+.e-5aac217e .line
+{
+	fill: none;
+	stroke: var(--ot-brand);
+	stroke-width: 1.5;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+
+.e-5aac217e .area
+{
+	fill: var(--ot-brand-opacity);
+	opacity: 0.5;
+}
+
+.e-5aac217e .dot
+{
+	fill: var(--ot-brand);
+	stroke: var(--ot-bg-2);
+	stroke-width: 1;
+	vector-effect: non-scaling-stroke;
+}
+
+.e-5aac217e .spark.accent-blue .line { stroke: var(--ot-blue); }
+.e-5aac217e .spark.accent-blue .area { fill: var(--ot-blue-opacity); }
+.e-5aac217e .spark.accent-blue .dot { fill: var(--ot-blue); }
+
+.e-5aac217e .spark.accent-green .line { stroke: var(--ot-green); }
+.e-5aac217e .spark.accent-green .area { fill: var(--ot-green-opacity); }
+.e-5aac217e .spark.accent-green .dot { fill: var(--ot-green); }
+
+.e-5aac217e .spark.accent-orange .line { stroke: var(--ot-orange); }
+.e-5aac217e .spark.accent-orange .area { fill: var(--ot-orange-opacity); }
+.e-5aac217e .spark.accent-orange .dot { fill: var(--ot-orange); }
+
+.e-5aac217e .spark.accent-red .line { stroke: var(--ot-red); }
+.e-5aac217e .spark.accent-red .area { fill: var(--ot-red-opacity); }
+.e-5aac217e .spark.accent-red .dot { fill: var(--ot-red); }
+
+.e-5aac217e .spark.accent-neutral .line { stroke: var(--ot-text-3); }
+.e-5aac217e .spark.accent-neutral .area { fill: none; }
+.e-5aac217e .spark.accent-neutral .dot { fill: var(--ot-text-3); }

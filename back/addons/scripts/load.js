@@ -10,12 +10,15 @@ scripts.Field('bash', ['string', null, true], null, (value, prevValue, item) =>
 	return value;
 });
 
-import './expose.js';
-import './functions/schema.js';
-import './item/functions/run.js';
-import './items/commands/run.js';
-import './events/ready.js';
-import './events/servers.add.js';
-import './events/approval.js';
+import './core/expose.js';
+import './items/commands/crud/create.js';
+import './items/commands/crud/update.js';
+import './items/commands/crud/delete.js';
+import './items/commands/crud/one.js';
+import './items/commands/crud/many.js';
+import './items/commands/publish.js';
+import './items/commands/unpublish.js';
+import './core/pipelines/publish.js';
+import './core/pipelines/duplicate.js';
 
 export default scripts;

@@ -1,0 +1,127 @@
+.e-27d5467d { display: block; height: 100%; }
+
+.e-27d5467d .stat-body
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-s);
+	justify-content: flex-end;
+	flex: 1;
+	min-height: 0;
+}
+
+.e-27d5467d .value-row
+{
+	display: flex;
+	align-items: baseline;
+	gap: var(--ot-spacing-s);
+	flex-wrap: wrap;
+}
+
+.e-27d5467d .value
+{
+	font-size: 30px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.e-27d5467d .value.link
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ot-brand);
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: 500;
+	word-break: break-all;
+}
+
+.e-27d5467d .value.link i
+{
+	font-size: 14px;
+}
+
+.e-27d5467d .value.link:hover { color: var(--ot-brand-hover); }
+
+.e-27d5467d .value.bool-yes
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ot-green);
+	font-size: 22px;
+}
+
+.e-27d5467d .value.bool-no
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--ot-orange);
+	font-size: 22px;
+}
+
+.e-27d5467d .value.bool-yes i,
+.e-27d5467d .value.bool-no i
+{
+	font-size: 20px;
+}
+
+.e-27d5467d .value.identifier
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: 'Geist Mono', monospace;
+	font-size: 16px;
+	color: var(--ot-text-1);
+	cursor: pointer;
+}
+
+.e-27d5467d .value.identifier i
+{
+	font-size: 13px;
+	color: var(--ot-text-3);
+}
+
+.e-27d5467d .value.identifier:hover i
+{
+	color: var(--ot-brand);
+}
+
+.e-27d5467d .trend
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	font-size: var(--ot-size-s);
+	font-weight: 500;
+	padding: 2px 6px;
+	border-radius: var(--ot-radius-s);
+}
+
+.e-27d5467d .trend i
+{
+	font-size: 14px;
+}
+
+.e-27d5467d .trend-up
+{
+	color: var(--ot-green);
+	background: var(--ot-green-opacity);
+}
+
+.e-27d5467d .trend-down
+{
+	color: var(--ot-red);
+	background: var(--ot-red-opacity);
+}
+
+.e-27d5467d .sub
+{
+	font-size: var(--ot-size-s);
+	color: var(--ot-text-3);
+}

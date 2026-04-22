@@ -2,6 +2,10 @@ onetype.AddonReady('elements', (elements) =>
 {
 	elements.ItemAdd({
 		id: 'package-header',
+		icon: 'inventory_2',
+		name: 'Package Header',
+		description: 'Premium hero for a package detail page.',
+		category: 'Packages',
 		config:
 		{
 			item:
@@ -10,11 +14,12 @@ onetype.AddonReady('elements', (elements) =>
 				value: null,
 				description: 'Package row from packages addon.'
 			},
-			scripts:
+			size:
 			{
-				type: 'array',
-				value: [],
-				description: 'Scripts belonging to this package.'
+				type: 'string',
+				value: 'l',
+				options: ['m', 'l'],
+				description: 'Header scale.'
 			}
 		},
 		render: function()
@@ -23,66 +28,111 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.Compute(() =>
 			{
-				const item = this.item || {};
+				const item = this.item;
 
-				const scope = item.is_global
-					? { label: 'Global', icon: 'public', color: 'brand' }
-					: item.is_marketplace
-						? { label: 'Marketplace', icon: 'storefront', color: 'blue' }
-						: { label: 'Team', icon: 'group', color: 'orange' };
+				if(item.server_id)
+				{
+					this.accent = 'green';
+				}
+				else
+				{
+					this.accent = 'orange';
+				}
 
-				this.name = item.name || '—';
-				this.description = item.description || '';
-				this.version = item.version || '';
-				this.platforms = (item.platforms || []).filter((platform) => platform !== '*');
-				this.anyPlatform = (item.platforms || []).includes('*');
-				this.scriptsCount = (this.scripts || []).length;
-				this.scopeLabel = scope.label;
-				this.scopeIcon = scope.icon;
-				this.scopeColor = scope.color;
+				this.identity =
+				{
+					name: item.name ? item.name : '—',
+					description: item.description ? item.description : '',
+					version: item.version ? item.version : ''
+				};
+
+				this.flags =
+				{
+					verified: item.is_verified === true,
+					marketplace: item.is_marketplace === true,
+					published: item.status === 'Published',
+					draft: item.status === 'Draft'
+				};
+
+				const platforms = item.platforms ? item.platforms : [];
+
+				if(platforms.includes('*'))
+				{
+					this.platforms = 'All platforms';
+				}
+				else
+				{
+					this.platforms = platforms.filter((platform) => platform !== '*').join(' · ');
+				}
+
+				this.slots =
+				{
+					tags: this.Slots.tags ? true : false,
+					right: this.Slots.right ? true : false
+				};
 			});
+
+			/* ===== CLASSES ===== */
+
+			this.classes = () =>
+			{
+				const list = ['box', 'size-' + this.size, 'accent-' + this.accent];
+
+				return list.join(' ');
+			};
 
 			/* ===== RENDER ===== */
 
 			return /* html */ `
-				<div :class="'box accent-' + scopeColor">
+				<section :class="classes()">
 					<div class="aurora"></div>
 					<div class="grid"></div>
+					<div class="noise"></div>
 
 					<div class="body">
-						<span :class="'eyebrow eyebrow-' + scopeColor">
-							<i>{{ scopeIcon }}</i>
-							{{ scopeLabel }}
-						</span>
+						<div class="head">
+							<div :class="'icon ' + accent">
+								<i>inventory_2</i>
+							</div>
 
-						<h1 class="name">
-							<span>{{ name }}</span>
-							<span ot-if="version" class="version">{{ version }}</span>
-						</h1>
+							<div class="head-text">
+								<div class="title-row">
+									<h1 class="name">{{ identity.name }}</h1>
 
-						<p ot-if="description" class="description">{{ description }}</p>
+									<span ot-if="flags.verified" class="verified" ot-tooltip="{ text: 'Verified by Mesh', position: { x: 'center', y: 'top' } }">
+										<i>verified</i>
+									</span>
+								</div>
 
-						<div class="meta">
-							<span ot-if="anyPlatform" class="meta-item">
-								<i>all_inclusive</i>
-								All platforms
-							</span>
-							<span ot-for="platform in platforms" class="meta-item">
-								<i ot-if="platform === 'linux'">lan</i>
-								<i ot-if="platform === 'darwin'">laptop_mac</i>
-								<span>{{ platform }}</span>
-							</span>
-							<span ot-if="scriptsCount" class="meta-item">
-								<i>terminal</i>
-								{{ scriptsCount }} scripts
-							</span>
-							<span class="meta-item">
-								<i>check_circle</i>
-								Active on 2 servers
-							</span>
+								<div class="sub">
+									<span ot-if="identity.version" class="version">{{ identity.version }}</span>
+									<span ot-if="identity.version" class="dot-sep"></span>
+									<span class="platforms">{{ platforms }}</span>
+									<span ot-if="flags.marketplace" class="dot-sep"></span>
+									<span ot-if="flags.marketplace" class="marketplace">
+										<i>storefront</i>
+										<span>Marketplace</span>
+									</span>
+									<span ot-if="flags.draft" class="dot-sep"></span>
+									<span ot-if="flags.draft" class="draft">
+										<i>edit_note</i>
+										<span>Draft</span>
+									</span>
+								</div>
+							</div>
+
+							<div ot-if="slots.right" class="right">
+								<slot name="right"></slot>
+							</div>
+						</div>
+
+						<p ot-if="identity.description" class="description">{{ identity.description }}</p>
+
+						<div ot-if="slots.tags" class="tags">
+							<slot name="tags"></slot>
 						</div>
 					</div>
-				</div>
+				</section>
 			`;
 		}
 	});

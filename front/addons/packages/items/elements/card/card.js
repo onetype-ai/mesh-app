@@ -2,6 +2,10 @@ onetype.AddonReady('elements', (elements) =>
 {
 	elements.ItemAdd({
 		id: 'package-card',
+		icon: 'inventory_2',
+		name: 'Package Card',
+		description: 'Clean, focused package preview card.',
+		category: 'Packages',
 		config:
 		{
 			item:
@@ -9,6 +13,28 @@ onetype.AddonReady('elements', (elements) =>
 				type: 'object',
 				value: null,
 				description: 'Package row from packages addon.'
+			},
+			size:
+			{
+				type: 'string',
+				value: 'm',
+				options: ['s', 'm', 'l'],
+				description: 'Card size.'
+			},
+			background:
+			{
+				type: 'string',
+				value: 'bg-2',
+				options: ['bg-1', 'bg-2', 'bg-3', 'bg-4'],
+				description: 'Background depth.'
+			},
+			variant:
+			{
+				type: 'array',
+				value: ['border', 'hover-lift'],
+				each: { type: 'string' },
+				options: ['border', 'hover-lift'],
+				description: 'Visual modifiers.'
 			}
 		},
 		render: function()
@@ -17,61 +43,124 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.Compute(() =>
 			{
-				const item = this.item || {};
+				const item = this.item;
 
-				const scope = item.is_global
-					? { label: 'Global', icon: 'public', color: 'brand' }
-					: item.is_marketplace
-						? { label: 'Marketplace', icon: 'storefront', color: 'blue' }
-						: { label: 'Team', icon: 'group', color: 'orange' };
+				/* Accent — server-bound packages get a green tint. Default is warm orange. */
 
-				this.name = item.name || '—';
-				this.version = item.version || '';
-				this.description = item.description || '';
-				this.scripts = item.scripts || [];
-				this.platforms = (item.platforms || []).filter((platform) => platform !== '*');
-				this.anyPlatform = (item.platforms || []).includes('*');
-				this.scopeLabel = scope.label;
-				this.scopeIcon = scope.icon;
-				this.scopeColor = scope.color;
+				if(item.server_id)
+				{
+					this.accent = 'green';
+				}
+				else
+				{
+					this.accent = 'orange';
+				}
+
+				/* Identity */
+
+				this.identity =
+				{
+					name: item.name ? item.name : '—',
+					description: item.description ? item.description : '',
+					version: item.version ? item.version : ''
+				};
+
+				/* Flags */
+
+				this.flags =
+				{
+					verified: item.is_verified === true,
+					draft: item.status === 'Draft',
+					archived: item.deleted_at ? true : false
+				};
+
+				/* Platforms — joined string to keep the card compact. */
+
+				const platforms = item.platforms ? item.platforms : [];
+
+				if(platforms.includes('*'))
+				{
+					this.platforms = 'All platforms';
+				}
+				else
+				{
+					this.platforms = platforms.filter((platform) => platform !== '*').join(' · ');
+				}
+
+				/* Slots */
+
+				this.slots =
+				{
+					tags: this.Slots.tags ? true : false,
+					actions: this.Slots.actions ? true : false
+				};
 			});
+
+			/* ===== CLASSES ===== */
+
+			this.classes = () =>
+			{
+				const list = ['box', this.background, 'size-' + this.size, 'accent-' + this.accent];
+
+				this.variant.forEach((modifier) =>
+				{
+					list.push(modifier);
+				});
+
+				if(this.flags.archived)
+				{
+					list.push('archived');
+				}
+
+				if(this.flags.draft)
+				{
+					list.push('draft');
+				}
+
+				return list.join(' ');
+			};
 
 			/* ===== RENDER ===== */
 
 			return /* html */ `
-				<div class="box">
-					<div class="head">
-						<div :class="'scope scope-' + scopeColor">
-							<i>{{ scopeIcon }}</i>
+				<article :class="classes()">
+					<header class="head">
+						<div :class="'icon ' + accent">
+							<i>inventory_2</i>
 						</div>
-						<div class="head-text">
-							<h3 class="name">{{ name }}</h3>
-							<div class="scope-label">{{ scopeLabel }}</div>
+
+						<div class="identity">
+							<div class="title-row">
+								<h3 class="name">{{ identity.name }}</h3>
+
+								<span ot-if="flags.verified" class="verified" ot-tooltip="{ text: 'Verified by Mesh', position: { x: 'center', y: 'top' } }">
+									<i>verified</i>
+								</span>
+
+								<span ot-if="flags.draft" class="draft-pill">Draft</span>
+							</div>
+
+							<span ot-if="identity.version" class="version">{{ identity.version }}</span>
 						</div>
-						<span ot-if="version" class="version">{{ version }}</span>
+					</header>
+
+					<p ot-if="identity.description" class="description">{{ identity.description }}</p>
+
+					<div ot-if="slots.tags" class="tags">
+						<slot name="tags"></slot>
 					</div>
 
-					<p ot-if="description" class="description">{{ description }}</p>
+					<footer class="foot">
+						<span class="platforms">
+							<i>memory</i>
+							<span>{{ platforms }}</span>
+						</span>
 
-					<div ot-if="scripts.length" class="scripts">
-						<span ot-for="script in scripts" class="script">
-							<i>terminal</i>
-							{{ script.name }}
-						</span>
-					</div>
-
-					<div class="footer">
-						<span ot-if="anyPlatform" class="platform">
-							<i>all_inclusive</i>
-							All platforms
-						</span>
-						<span ot-for="platform in platforms" class="platform">
-							<i ot-if="platform === 'linux'">lan</i>
-							<i ot-if="platform === 'darwin'">laptop_mac</i>
-							<span>{{ platform }}</span>
-						</span>
-					</div>
-				</div>
+						<div ot-if="slots.actions" class="actions">
+							<slot name="actions"></slot>
+						</div>
+					</footer>
+				</article>
 			`;
 		}
 	});

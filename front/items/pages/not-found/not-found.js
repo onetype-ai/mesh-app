@@ -3,7 +3,7 @@ onetype.AddonReady('pages', (pages) =>
 	pages.Item({
 		id: 'not-found',
 		route: '/404',
-		title: '404 - OneType Travel',
+		title: '404 - Mesh',
 		404: true,
 		grid: {
 			template: '"sidebar navbar" "sidebar main"',
@@ -19,7 +19,7 @@ onetype.AddonReady('pages', (pages) =>
 			navbar: function()
 			{
 				this.crumbs = [
-					{ label: 'Not found' }
+					{ icon: 'error', label: 'Not found' }
 				];
 
 				return `<e-navbar :crumbs="crumbs"></e-navbar>`;

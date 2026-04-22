@@ -33,6 +33,46 @@
 	border-bottom: none;
 }
 
+/* ===== Nested list ===== */
+
+.e-5ce286a9 > .box > .row > .nested
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-s);
+	flex: 1;
+	min-width: 0;
+}
+
+.e-5ce286a9 > .box > .row:has(> .nested)
+{
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.e-5ce286a9 > .box > .row:has(> .nested) > .info,
+.e-5ce286a9 > .box > .row:has(> .nested) > .nested
+{
+	flex: 1;
+	width: 100%;
+}
+
+.e-5ce286a9 .box .box
+{
+	border-color: var(--ot-bg-3-border);
+}
+
+.e-5ce286a9 > .box > .row .row
+{
+	background: var(--ot-bg-3);
+	border-bottom-color: var(--ot-bg-3-border);
+}
+
+.e-5ce286a9 > .box > .row .row .row
+{
+	background: var(--ot-bg-4);
+}
+
 /* ===== Info ===== */
 
 .e-5ce286a9 > .box > .row > .info

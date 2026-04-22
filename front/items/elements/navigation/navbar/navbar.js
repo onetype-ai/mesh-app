@@ -31,6 +31,10 @@ onetype.AddonReady('elements', (elements) =>
 			{
 				this.mode = 'marketplace';
 			}
+			else if (path.startsWith('/creator'))
+			{
+				this.mode = 'creator';
+			}
 			else
 			{
 				this.mode = 'manage';
@@ -41,6 +45,11 @@ onetype.AddonReady('elements', (elements) =>
 				{ id: 'manage', label: 'Manage', icon: 'grid_view', href: '/' },
 				{ id: 'marketplace', label: 'Marketplace', icon: 'storefront', href: '/marketplace' }
 			];
+
+			if(this.state.user)
+			{
+				this.tabs.push({ id: 'creator', label: 'Creator', icon: 'code', href: '/creator/services' });
+			}
 
 			/* ===== HANDLERS ===== */
 			this.changeSearch = ({ value }) =>
@@ -92,6 +101,7 @@ onetype.AddonReady('elements', (elements) =>
 							ot-if="state.user"
 							text="Add a server"
 							icon="add"
+							href="/servers/create"
 							color="dark"
 							tone="solid"
 							size="m"

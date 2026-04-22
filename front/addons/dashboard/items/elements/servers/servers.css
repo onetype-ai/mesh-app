@@ -1,0 +1,15 @@
+.e-7b438401 { display: block; }
+
+.e-7b438401 .box
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-l);
+}
+
+.e-7b438401 .servers
+{
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-l);
+}

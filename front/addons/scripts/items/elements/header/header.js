@@ -2,6 +2,10 @@ onetype.AddonReady('elements', (elements) =>
 {
 	elements.ItemAdd({
 		id: 'script-header',
+		icon: 'terminal',
+		name: 'Script Header',
+		description: 'Premium hero for a script detail page.',
+		category: 'Scripts',
 		config:
 		{
 			item:
@@ -9,6 +13,13 @@ onetype.AddonReady('elements', (elements) =>
 				type: 'object',
 				value: null,
 				description: 'Script row from scripts addon.'
+			},
+			size:
+			{
+				type: 'string',
+				value: 'l',
+				options: ['m', 'l'],
+				description: 'Header scale.'
 			}
 		},
 		render: function()
@@ -17,76 +28,158 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.Compute(() =>
 			{
-				const item = this.item || {};
+				const item = this.item;
 
-				const scope = item.is_global
-					? { label: 'Global', icon: 'public', color: 'brand' }
-					: item.is_marketplace
-						? { label: 'Marketplace', icon: 'storefront', color: 'blue' }
-						: item.service_id
-							? { label: 'Service', icon: 'deployed_code', color: 'orange' }
-							: item.server_id
-								? { label: 'Server', icon: 'dns', color: 'green' }
-								: { label: 'Team', icon: 'group', color: 'orange' };
+				if(item.package_id)
+				{
+					this.accent = 'orange';
+				}
+				else if(item.service_id)
+				{
+					this.accent = 'brand';
+				}
+				else if(item.server_id)
+				{
+					this.accent = 'green';
+				}
+				else
+				{
+					this.accent = 'brand';
+				}
 
-				this.name = item.name || '—';
-				this.description = item.description || '';
-				this.output = item.output || 'raw';
-				this.autorun = item.autorun === true;
-				this.loop = item.loop ? (item.loop >= 1000 ? (item.loop / 1000) + 's' : item.loop + 'ms') : null;
-				this.metricsCount = (item.metrics || []).length;
-				this.platforms = (item.platforms || []).filter((platform) => platform !== '*');
-				this.anyPlatform = (item.platforms || []).includes('*');
-				this.scopeLabel = scope.label;
-				this.scopeIcon = scope.icon;
-				this.scopeColor = scope.color;
+				this.identity =
+				{
+					name: item.name ? item.name : '—',
+					description: item.description ? item.description : ''
+				};
+
+				this.flags =
+				{
+					verified: item.is_verified === true,
+					marketplace: item.is_marketplace === true,
+					published: item.status === 'Published',
+					draft: item.status === 'Draft',
+					autorun: item.autorun === true
+				};
+
+				this.schedule = '';
+
+				if(item.loop)
+				{
+					if(item.loop >= 1000)
+					{
+						this.schedule = (item.loop / 1000) + 's loop';
+					}
+					else
+					{
+						this.schedule = item.loop + 'ms loop';
+					}
+				}
+
+				this.output = '';
+
+				if(item.output === 'JSON')
+				{
+					this.output = 'JSON';
+				}
+
+				const platforms = item.platforms ? item.platforms : [];
+
+				if(platforms.includes('*'))
+				{
+					this.platforms = 'All platforms';
+				}
+				else
+				{
+					this.platforms = platforms.filter((platform) => platform !== '*').join(' · ');
+				}
+
+				this.slots =
+				{
+					tags: this.Slots.tags ? true : false,
+					right: this.Slots.right ? true : false
+				};
 			});
+
+			/* ===== CLASSES ===== */
+
+			this.classes = () =>
+			{
+				const list = ['box', 'size-' + this.size, 'accent-' + this.accent];
+
+				return list.join(' ');
+			};
 
 			/* ===== RENDER ===== */
 
 			return /* html */ `
-				<div :class="'box accent-' + scopeColor">
+				<section :class="classes()">
 					<div class="aurora"></div>
 					<div class="grid"></div>
+					<div class="noise"></div>
 
 					<div class="body">
-						<span :class="'eyebrow eyebrow-' + scopeColor">
-							<i>{{ scopeIcon }}</i>
-							{{ scopeLabel }}
-						</span>
+						<div class="head">
+							<div :class="'icon ' + accent">
+								<i>terminal</i>
+							</div>
 
-						<h1 class="name">
-							<span>{{ name }}</span>
-							<span class="output">{{ output }}</span>
-						</h1>
+							<div class="head-text">
+								<div class="title-row">
+									<h1 class="name">{{ identity.name }}</h1>
 
-						<p ot-if="description" class="description">{{ description }}</p>
+									<span ot-if="flags.verified" class="verified" ot-tooltip="{ text: 'Verified by Mesh', position: { x: 'center', y: 'top' } }">
+										<i>verified</i>
+									</span>
+								</div>
 
-						<div class="meta">
-							<span ot-if="anyPlatform" class="meta-item">
-								<i>all_inclusive</i>
-								All platforms
-							</span>
-							<span ot-for="platform in platforms" class="meta-item">
-								<i ot-if="platform === 'linux'">lan</i>
-								<i ot-if="platform === 'darwin'">laptop_mac</i>
-								<span>{{ platform }}</span>
-							</span>
-							<span ot-if="autorun" class="meta-item">
-								<i>bolt</i>
-								Autorun
-							</span>
-							<span ot-if="loop" class="meta-item">
-								<i>refresh</i>
-								Every {{ loop }}
-							</span>
-							<span ot-if="metricsCount" class="meta-item">
-								<i>analytics</i>
-								{{ metricsCount }} metrics
-							</span>
+								<div class="sub">
+									<span class="platforms">{{ platforms }}</span>
+
+									<span ot-if="flags.autorun" class="dot-sep"></span>
+									<span ot-if="flags.autorun" class="sub-autorun">
+										<i>bolt</i>
+										<span>Autorun</span>
+									</span>
+
+									<span ot-if="schedule" class="dot-sep"></span>
+									<span ot-if="schedule" class="sub-schedule">
+										<i>refresh</i>
+										<span>{{ schedule }}</span>
+									</span>
+
+									<span ot-if="output" class="dot-sep"></span>
+									<span ot-if="output" class="sub-output">
+										<i>data_object</i>
+										<span>{{ output }}</span>
+									</span>
+
+									<span ot-if="flags.marketplace" class="dot-sep"></span>
+									<span ot-if="flags.marketplace" class="sub-marketplace">
+										<i>storefront</i>
+										<span>Marketplace</span>
+									</span>
+
+									<span ot-if="flags.draft" class="dot-sep"></span>
+									<span ot-if="flags.draft" class="sub-draft">
+										<i>edit_note</i>
+										<span>Draft</span>
+									</span>
+								</div>
+							</div>
+
+							<div ot-if="slots.right" class="right">
+								<slot name="right"></slot>
+							</div>
+						</div>
+
+						<p ot-if="identity.description" class="description">{{ identity.description }}</p>
+
+						<div ot-if="slots.tags" class="tags">
+							<slot name="tags"></slot>
 						</div>
 					</div>
-				</div>
+				</section>
 			`;
 		}
 	});

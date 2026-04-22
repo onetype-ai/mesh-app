@@ -2,6 +2,10 @@ onetype.AddonReady('elements', (elements) =>
 {
 	elements.ItemAdd({
 		id: 'server-card',
+		icon: 'dns',
+		name: 'Server Card',
+		description: 'Horizontal premium server card with live system metrics.',
+		category: 'Servers',
 		config:
 		{
 			item:
@@ -10,26 +14,27 @@ onetype.AddonReady('elements', (elements) =>
 				value: null,
 				description: 'Server row from servers addon.'
 			},
-			tag:
+			size:
 			{
-				type: 'object',
-				value: null,
-				config:
-				{
-					label: ['string'],
-					color:
-					{
-						type: 'string',
-						options: ['brand', 'blue', 'green', 'red', 'orange']
-					}
-				},
-				description: 'Optional status tag shown on the right side.'
+				type: 'string',
+				value: 'm',
+				options: ['s', 'm', 'l'],
+				description: 'Card size.'
 			},
-			metrics:
+			background:
+			{
+				type: 'string',
+				value: 'bg-2',
+				options: ['bg-1', 'bg-2', 'bg-3', 'bg-4'],
+				description: 'Background depth.'
+			},
+			variant:
 			{
 				type: 'array',
-				value: [],
-				description: 'Metric widgets to render from server.metrics.'
+				value: ['border', 'hover-lift'],
+				each: { type: 'string' },
+				options: ['border', 'hover-lift'],
+				description: 'Visual modifiers.'
 			}
 		},
 		render: function()
@@ -55,7 +60,7 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.formatUptime = (seconds) =>
 			{
-				if(!seconds) return '—';
+				if(!seconds) return '';
 
 				const days = Math.floor(seconds / 86400);
 				const hours = Math.floor((seconds % 86400) / 3600);
@@ -66,162 +71,195 @@ onetype.AddonReady('elements', (elements) =>
 				return Math.floor(seconds / 60) + 'm';
 			};
 
-			this.formatMetric = (value, widget) =>
-			{
-				if(value === undefined || value === null)
-				{
-					return '—';
-				}
-
-				if(widget.widget === 'badge')
-				{
-					return value === true ? 'Yes' : value === false ? 'No' : String(value);
-				}
-
-				return String(value);
-			};
-
 			/* ===== DERIVED ===== */
 
 			this.Compute(() =>
 			{
-				const item = this.item || {};
-				const metrics = item.metrics || {};
+				const item = this.item;
+				const staticData = item.system_static ? item.system_static : {};
+				const dynamicData = item.system_dynamic ? item.system_dynamic : {};
 
-				const ramTotal = metrics['system.ram.total'] || 0;
-				const ramUsed = metrics['system.ram.used'] || 0;
-				const disks = metrics['system.disk'] || [];
-				const diskUsage = metrics['system.disk.usage'] || [];
-				const gpus = metrics['system.gpu'] || [];
-				const gpuUsage = metrics['system.gpu.usage'] || [];
-
-				const diskTotal = disks.reduce((sum, disk) => sum + (disk.total || 0), 0);
-				const diskUsed = diskUsage.reduce((sum, disk) => sum + (disk.used || 0), 0);
-				const diskFree = diskUsage.reduce((sum, disk) => sum + (disk.free || 0), 0);
-				const diskDenom = diskUsed + diskFree;
-
-				const vramTotal = gpus.reduce((sum, gpu) => sum + (gpu.vram || 0), 0);
-				const vramUsed = gpuUsage.reduce((sum, gpu) => sum + (gpu.vram_used || 0), 0);
-
-				const cpuUsage = metrics['system.cpu.usage'] || 0;
-				const cpuCores = metrics['system.cpu.cores'] || 0;
-
-				this.active = item.status === 'Active';
-				this.rented = item.is_rented === true;
-				this.name = item.name || '—';
-				this.hostname = metrics['system.network.hostname'] || '';
-				this.osLabel = (metrics['system.os.name'] || '—') + ' ' + (metrics['system.os.version'] || '');
-				this.cpuModel = metrics['system.cpu.model'] || '—';
-				this.cpuCores = cpuCores;
-				this.ramLabel = this.formatBytes(ramTotal);
-				this.diskLabel = this.formatBytes(diskTotal);
-				this.diskCount = disks.length;
-				this.gpuCount = gpus.length;
-				this.cpuPercent = Math.round(cpuUsage);
-				this.cpuSubtext = cpuCores ? (cpuUsage * cpuCores / 100).toFixed(1) + ' / ' + cpuCores + ' cores' : '';
-				this.ramPercent = ramTotal ? Math.round((ramUsed / ramTotal) * 100) : 0;
-				this.ramSubtext = ramTotal ? this.formatBytes(ramUsed) + ' / ' + this.formatBytes(ramTotal) : '';
-				this.diskPercent = diskDenom ? Math.round((diskUsed / diskDenom) * 100) : 0;
-				this.diskSubtext = diskDenom ? this.formatBytes(diskUsed) + ' / ' + this.formatBytes(diskDenom) : '';
-				this.hasGpu = gpus.length > 0;
-				this.vramPercent = vramTotal ? Math.round((vramUsed / vramTotal) * 100) : 0;
-				this.vramSubtext = vramTotal ? this.formatBytes(vramUsed * 1024 * 1024) + ' / ' + this.formatBytes(vramTotal * 1024 * 1024) : '';
-				this.uptime = this.formatUptime(metrics['system.uptime']);
-				this.href = '/servers/' + (item.id || '');
-
-				/* ===== Extra metrics from caller schema ===== */
-				this.extraMetrics = (this.metrics || []).map((widget) =>
+				if(item.status === 'Active')
 				{
-					const value = metrics[widget.key];
+					this.accent = 'green';
+				}
+				else
+				{
+					this.accent = 'neutral';
+				}
 
-					return {
-						label: widget.label || widget.id,
-						value: this.formatMetric(value, widget)
-					};
-				}).filter((entry) => entry.value !== null && entry.value !== '');
+				const os = staticData.os ? staticData.os : {};
+				const network = staticData.network ? staticData.network : {};
+
+				this.identity =
+				{
+					name: item.name ? item.name : '—',
+					hostname: network.hostname ? network.hostname : '',
+					os: (os.name ? os.name : '') + (os.version ? ' ' + os.version : '')
+				};
+
+				this.flags =
+				{
+					active: item.status === 'Active',
+					rented: item.is_rented === true,
+					initialized: item.is_initialized === true,
+					hasSpecs: !!(staticData.cpu || staticData.ram || (staticData.disk && staticData.disk.length))
+				};
+
+				const cpu = staticData.cpu ? staticData.cpu : {};
+				const ram = staticData.ram ? staticData.ram : {};
+				const disks = staticData.disk ? staticData.disk : [];
+				const gpus = staticData.gpu ? staticData.gpu : [];
+
+				const specParts = [];
+
+				if(cpu.cores)
+				{
+					specParts.push(cpu.cores + 'c');
+				}
+
+				if(ram.total)
+				{
+					specParts.push(this.formatBytes(ram.total));
+				}
+
+				const diskTotal = disks.reduce((sum, entry) => sum + (entry.total ? entry.total : 0), 0);
+
+				if(diskTotal)
+				{
+					specParts.push(this.formatBytes(diskTotal));
+				}
+
+				if(gpus.length)
+				{
+					specParts.push(gpus.length + '× GPU');
+				}
+
+				this.specsLine = specParts.join(' · ');
+
+				const cpuUsage = dynamicData.cpu && dynamicData.cpu.usage ? dynamicData.cpu.usage : 0;
+				const ramDynamic = dynamicData.ram ? dynamicData.ram : {};
+				const diskDynamic = dynamicData.disk ? dynamicData.disk : [];
+				const gpuDynamic = dynamicData.gpu ? dynamicData.gpu : [];
+
+				const diskUsed = diskDynamic.reduce((sum, entry) => sum + (entry.used ? entry.used : 0), 0);
+				const diskFree = diskDynamic.reduce((sum, entry) => sum + (entry.free ? entry.free : 0), 0);
+				const diskTotalDynamic = diskUsed + diskFree;
+
+				const vramTotal = gpus.reduce((sum, entry) => sum + (entry.vram ? entry.vram : 0), 0);
+				const vramUsed = gpuDynamic.reduce((sum, entry) => sum + (entry.vram_used ? entry.vram_used : 0), 0);
+
+				this.bars =
+				[
+					{
+						key: 'cpu',
+						label: 'CPU',
+						value: Math.round(cpuUsage),
+						color: 'brand'
+					},
+					{
+						key: 'ram',
+						label: 'RAM',
+						value: ram.total ? Math.round((ramDynamic.used ? ramDynamic.used : 0) / ram.total * 100) : 0,
+						color: 'blue'
+					},
+					{
+						key: 'disk',
+						label: 'DISK',
+						value: diskTotalDynamic ? Math.round(diskUsed / diskTotalDynamic * 100) : 0,
+						color: 'green'
+					}
+				];
+
+				if(vramTotal > 0)
+				{
+					this.bars.push({
+						key: 'vram',
+						label: 'VRAM',
+						value: Math.round(vramUsed / vramTotal * 100),
+						color: 'orange'
+					});
+				}
+
+				this.uptime = this.formatUptime(dynamicData.uptime);
+
+				this.slots =
+				{
+					tags: this.Slots.tags ? true : false,
+					actions: this.Slots.actions ? true : false
+				};
 			});
+
+			/* ===== CLASSES ===== */
+
+			this.classes = () =>
+			{
+				const list = ['box', this.background, 'size-' + this.size, 'accent-' + this.accent];
+
+				this.variant.forEach((modifier) =>
+				{
+					list.push(modifier);
+				});
+
+				if(!this.flags.active)
+				{
+					list.push('inactive');
+				}
+
+				return list.join(' ');
+			};
 
 			/* ===== RENDER ===== */
 
 			return /* html */ `
-				<div class="box">
+				<article :class="classes()">
+					<div :class="'icon ' + accent">
+						<i>dns</i>
+						<span :class="'pulse ' + (flags.active ? 'on' : 'off')"></span>
+					</div>
+
 					<div class="identity">
-						<span :class="'dot ' + (active ? 'active' : 'inactive')"></span>
-						<div class="identity-text">
-							<h3 class="name">{{ name }}</h3>
-							<div ot-if="hostname" class="meta">
-								<span class="hostname">{{ hostname }}</span>
-							</div>
+						<div class="title-row">
+							<h3 class="name">{{ identity.name }}</h3>
+
+							<span ot-if="identity.hostname" class="hostname">{{ identity.hostname }}</span>
+
+							<span ot-if="flags.rented" class="rented" ot-tooltip="{ text: 'Rented from marketplace', position: { x: 'center', y: 'top' } }">
+								<i>storefront</i>
+							</span>
+						</div>
+
+						<div class="sub">
+							<span ot-if="!flags.initialized" class="dim">Not configured</span>
+							<span ot-if="flags.initialized && identity.os" class="os">{{ identity.os }}</span>
+							<span ot-if="flags.initialized && specsLine" class="dot-sep"></span>
+							<span ot-if="flags.initialized && specsLine" class="specs-line">{{ specsLine }}</span>
+							<span ot-if="uptime" class="dot-sep"></span>
+							<span ot-if="uptime" class="uptime">
+								<i>schedule</i>
+								<span>{{ uptime }}</span>
+							</span>
+						</div>
+
+						<div ot-if="slots.tags" class="tags">
+							<slot name="tags"></slot>
 						</div>
 					</div>
 
-					<div class="specs">
-						<span class="spec">
-							<i>memory</i>
-							{{ cpuModel }}
-						</span>
-						<span class="spec">
-							<i>developer_board</i>
-							{{ cpuCores }}c
-						</span>
-						<span class="spec">
-							<i>database</i>
-							{{ ramLabel }}
-						</span>
-						<span ot-if="diskCount" class="spec">
-							<i>hard_drive_2</i>
-							{{ diskLabel }}
-						</span>
-						<span ot-if="gpuCount" class="spec gpu">
-							<i>developer_board</i>
-							{{ gpuCount }} GPU
-						</span>
-						<span class="spec">
-							<i>terminal</i>
-							{{ osLabel }}
-						</span>
-						<span ot-for="metric in extraMetrics" class="spec extra">
-							<span class="extra-label">{{ metric.label }}</span>
-							<span class="extra-value">{{ metric.value }}</span>
-						</span>
-					</div>
-
-					<div class="bars">
-						<div class="mini">
-							<span class="mini-label">CPU</span>
-							<div class="mini-track">
-								<div class="mini-fill brand" :style="'width:' + cpuPercent + '%'"></div>
+					<div ot-if="flags.hasSpecs" class="bars">
+						<div ot-for="bar in bars" :class="'bar bar-' + bar.color">
+							<span class="bar-label">{{ bar.label }}</span>
+							<div class="bar-track">
+								<div class="bar-fill" :style="'width: ' + bar.value + '%'"></div>
 							</div>
-							<span class="mini-value">{{ cpuPercent }}%</span>
-						</div>
-						<div class="mini">
-							<span class="mini-label">RAM</span>
-							<div class="mini-track">
-								<div class="mini-fill blue" :style="'width:' + ramPercent + '%'"></div>
-							</div>
-							<span class="mini-value">{{ ramPercent }}%</span>
-						</div>
-						<div class="mini">
-							<span class="mini-label">DISK</span>
-							<div class="mini-track">
-								<div class="mini-fill green" :style="'width:' + diskPercent + '%'"></div>
-							</div>
-							<span class="mini-value">{{ diskPercent }}%</span>
-						</div>
-						<div ot-if="hasGpu" class="mini">
-							<span class="mini-label">VRAM</span>
-							<div class="mini-track">
-								<div class="mini-fill orange" :style="'width:' + vramPercent + '%'"></div>
-							</div>
-							<span class="mini-value">{{ vramPercent }}%</span>
+							<span class="bar-value">{{ bar.value }}%</span>
 						</div>
 					</div>
 
-					<div class="aside">
-						<span ot-if="tag" :class="'tag tag-' + (tag.color || 'brand')">{{ tag.label }}</span>
+					<div ot-if="slots.actions" class="actions">
 						<slot name="actions"></slot>
 					</div>
-				</div>
+				</article>
 			`;
 		}
 	});

@@ -8,11 +8,15 @@ import database from '@onetype/framework/database';
 import '#auth/load.js';
 
 /* Addons */
+import '#agents/load.js';
 import '#servers/load.js';
 import '#scripts/load.js';
 import '#approvals/load.js';
 import '#packages/load.js';
 import '#logs/load.js';
+import '#gateways/load.js';
+import '#services/load.js';
+import '#marketplace/load.js';
 
 /* Items */
 import './items/assets/assets.js';

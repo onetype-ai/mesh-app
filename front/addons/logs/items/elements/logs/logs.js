@@ -24,8 +24,6 @@ onetype.AddonReady('elements', (elements) =>
 			this.level = 'All';
 			this.source = 'All';
 			this.items = [];
-			this.servers = [];
-			this.scripts = [];
 			this.refreshing = false;
 			this.alive = true;
 			this.generation = 0;
@@ -54,7 +52,11 @@ onetype.AddonReady('elements', (elements) =>
 
 				this.refreshing = true;
 
-				const query = logs.Find().sort('created_at', 'desc').limit(200);
+				const query = logs.Find()
+					.sort('created_at', 'desc')
+					.limit(200)
+					.join('servers', 'server_id', 'server', (join) => join.select(['id', 'name']))
+					.join('scripts', 'script_id', 'script', (join) => join.select(['id', 'name']));
 
 				if(this.server)
 				{
@@ -87,17 +89,6 @@ onetype.AddonReady('elements', (elements) =>
 				this.refreshing = false;
 			};
 
-			this.lookups = async () =>
-			{
-				const [serversList, scriptsList] = await Promise.all([
-					servers.Find().select(['id', 'name']).limit(1000).many(),
-					scripts.Find().select(['id', 'name']).limit(1000).many()
-				]);
-
-				this.servers = serversList.map((item) => item.data);
-				this.scripts = scriptsList.map((item) => item.data);
-			};
-
 			this.loop = async () =>
 			{
 				while(this.alive)
@@ -117,7 +108,6 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.OnReady(() =>
 			{
-				this.lookups();
 				this.loop();
 			});
 
@@ -142,35 +132,7 @@ onetype.AddonReady('elements', (elements) =>
 				this.fetch();
 			};
 
-			/* ===== DERIVED ===== */
-
-			this.Compute(() =>
-			{
-				this.serversById = {};
-				this.scriptsById = {};
-
-				for(const server of this.servers)
-				{
-					this.serversById[server.id] = server;
-				}
-
-				for(const script of this.scripts)
-				{
-					this.scriptsById[script.id] = script;
-				}
-			});
-
 			/* ===== HELPERS ===== */
-
-			this.resolveServer = (item) =>
-			{
-				return item.server_id ? this.serversById[item.server_id] : null;
-			};
-
-			this.resolveScript = (item) =>
-			{
-				return item.script_id ? this.scriptsById[item.script_id] : null;
-			};
 
 			this.isEmpty = () => this.items.length === 0;
 
@@ -218,8 +180,8 @@ onetype.AddonReady('elements', (elements) =>
 						<e-log
 							ot-for="item in items"
 							:item="item"
-							:server="resolveServer(item)"
-							:script="resolveScript(item)"
+							:server="item.server"
+							:script="item.script"
 						></e-log>
 					</div>
 				</div>

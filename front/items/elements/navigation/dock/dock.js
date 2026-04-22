@@ -12,13 +12,14 @@ elements.ItemAdd({
 					{ icon: 'dns', label: 'Servers', href: '/servers' },
 					{ icon: 'deployed_code', label: 'Services', href: '/services' },
 					{ icon: 'inventory_2', label: 'Packages', href: '/packages' },
-					{ icon: 'terminal', label: 'Scripts', href: '/scripts' },
-				{ icon: 'description', label: 'Logs', href: '/logs' }
+					{ icon: 'terminal', label: 'Scripts', href: '/scripts' }
 				]
 			}
 		];
 
-		const bottom = [];
+		const bottom = [
+			{ icon: 'description', label: 'Logs', href: '/logs' }
+		];
 
 		if(this.state.user)
 		{

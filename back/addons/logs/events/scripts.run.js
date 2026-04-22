@@ -22,6 +22,8 @@ onetype.EmitOn('scripts.run', async function({ server, script, result, time })
 
 	delete data.json;
 
+	console.log('Script run:', script.Get('name'), 'on', server.Get('name'), '[' + level + ', code ' + code + ', ' + time + 'ms]');
+
 	await logs.Fn('write', {
 		team: server.Get('team_id'),
 		server: server.Get('id'),

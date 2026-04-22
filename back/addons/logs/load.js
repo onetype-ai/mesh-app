@@ -2,7 +2,12 @@ import logs from '#shared/logs/addon.js';
 
 logs.Table('mesh_logs');
 
-import './expose.js';
+import './core/expose.js';
+import './items/commands/crud/create.js';
+import './items/commands/crud/update.js';
+import './items/commands/crud/delete.js';
+import './items/commands/crud/one.js';
+import './items/commands/crud/many.js';
 import './items/functions/write.js';
 import './events/scripts.run.js';
 import './events/scripts.approval.js';

@@ -3,6 +3,8 @@ import logs from '#shared/logs/addon.js';
 
 onetype.EmitOn('scripts.approval', async function({ server, script, result })
 {
+	console.log('Script approval needed:', script.Get('name'), 'on', server.Get('name'));
+
 	await logs.Fn('write', {
 		team: server.Get('team_id'),
 		server: server.Get('id'),

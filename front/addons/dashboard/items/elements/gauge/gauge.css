@@ -1,0 +1,85 @@
+.e-2c7b03aa { display: block; height: 100%; }
+
+.e-2c7b03aa .gauge-body
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: var(--ot-spacing-s);
+	flex: 1;
+	padding: var(--ot-spacing-s) 0;
+}
+
+.e-2c7b03aa .dial
+{
+	position: relative;
+	width: 140px;
+	height: 140px;
+}
+
+.e-2c7b03aa .ring
+{
+	width: 100%;
+	height: 100%;
+	transform: rotate(135deg);
+}
+
+.e-2c7b03aa .track
+{
+	fill: none;
+	stroke: var(--ot-bg-3);
+	stroke-width: 10;
+	stroke-linecap: round;
+}
+
+.e-2c7b03aa .fill
+{
+	fill: none;
+	stroke: var(--ot-brand);
+	stroke-width: 10;
+	stroke-linecap: round;
+	transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+	filter: drop-shadow(0 0 6px currentColor);
+}
+
+.e-2c7b03aa .dial.accent-brand .fill { stroke: var(--ot-brand); }
+.e-2c7b03aa .dial.accent-blue .fill { stroke: var(--ot-blue); }
+.e-2c7b03aa .dial.accent-green .fill { stroke: var(--ot-green); }
+.e-2c7b03aa .dial.accent-orange .fill { stroke: var(--ot-orange); }
+.e-2c7b03aa .dial.accent-red .fill { stroke: var(--ot-red); }
+
+.e-2c7b03aa .readout
+{
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+}
+
+.e-2c7b03aa .number
+{
+	font-size: 32px;
+	font-weight: 600;
+	color: var(--ot-text-1);
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.e-2c7b03aa .unit
+{
+	font-size: 16px;
+	color: var(--ot-text-2);
+	margin-left: 2px;
+	font-weight: 500;
+}
+
+.e-2c7b03aa .sub
+{
+	font-size: var(--ot-size-s);
+	color: var(--ot-text-3);
+	text-align: center;
+}

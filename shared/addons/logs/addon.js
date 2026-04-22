@@ -33,4 +33,6 @@ const logs = onetype.Addon('logs', (logs) =>
 	logs.Field('deleted_at', ['string']);
 });
 
+import './schema.js';
+
 export default logs;

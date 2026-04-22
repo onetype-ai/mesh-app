@@ -14,4 +14,6 @@ const approvals = onetype.Addon('approvals', (approvals) =>
 	approvals.Field('deleted_at', ['string']);
 });
 
+import './schema.js';
+
 export default approvals;

@@ -1,0 +1,299 @@
+/* ===== ROOT ===== */
+
+.e-d29803b
+{
+	display: block;
+	width: 100%;
+}
+
+.e-d29803b > .box
+{
+	position: relative;
+	padding: calc(var(--ot-spacing-l) * 1.5) var(--ot-spacing-l);
+	border-bottom: 1px solid var(--ot-bg-2-border);
+	overflow: hidden;
+	isolation: isolate;
+}
+
+/* ===== AURORA ===== */
+
+.e-d29803b > .box > .aurora
+{
+	position: absolute;
+	top: -50%;
+	left: -10%;
+	width: 70%;
+	height: 180%;
+	background: radial-gradient(ellipse at center, var(--ot-bg-3-border) 0%, transparent 60%);
+	filter: blur(60px);
+	pointer-events: none;
+	z-index: -2;
+}
+
+.e-d29803b > .box.accent-blue  > .aurora { background: radial-gradient(ellipse at center, var(--ot-blue-opacity)  0%, transparent 60%); }
+.e-d29803b > .box.accent-green > .aurora { background: radial-gradient(ellipse at center, var(--ot-green-opacity) 0%, transparent 60%); }
+
+/* ===== GRID PATTERN ===== */
+
+.e-d29803b > .box > .grid
+{
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(var(--ot-bg-3-border) 1px, transparent 1px),
+		linear-gradient(90deg, var(--ot-bg-3-border) 1px, transparent 1px);
+	background-size: 44px 44px;
+	background-position: -1px -1px;
+	mask-image: radial-gradient(ellipse 60% 80% at 80% 30%, black 0%, transparent 70%);
+	-webkit-mask-image: radial-gradient(ellipse 60% 80% at 80% 30%, black 0%, transparent 70%);
+	opacity: 0.5;
+	pointer-events: none;
+	z-index: -1;
+}
+
+/* ===== NOISE ===== */
+
+.e-d29803b > .box > .noise
+{
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+	background-size: 3px 3px;
+	opacity: 0.6;
+	pointer-events: none;
+	mix-blend-mode: overlay;
+	z-index: -1;
+}
+
+/* ===== BODY ===== */
+
+.e-d29803b > .box > .body
+{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: var(--ot-spacing-m);
+	min-width: 0;
+}
+
+/* ===== HEAD ===== */
+
+.e-d29803b > .box > .body > .head
+{
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-m);
+}
+
+.e-d29803b > .box > .body > .head > .icon
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 72px;
+	height: 72px;
+	border-radius: var(--ot-radius-l);
+	border: 1px solid transparent;
+	box-shadow: 0 4px 16px -6px rgba(0, 0, 0, 0.3);
+}
+
+.e-d29803b > .box > .body > .head > .icon > i
+{
+	font-size: 36px;
+}
+
+.e-d29803b > .box > .body > .head > .icon.blue
+{
+	background: linear-gradient(135deg, var(--ot-blue-opacity), var(--ot-bg-3));
+	border-color: var(--ot-blue-border);
+	color: var(--ot-blue);
+}
+
+.e-d29803b > .box > .body > .head > .icon.green
+{
+	background: linear-gradient(135deg, var(--ot-green-opacity), var(--ot-bg-3));
+	border-color: var(--ot-green-border);
+	color: var(--ot-green);
+}
+
+/* Head text */
+
+.e-d29803b > .box > .body > .head > .head-text
+{
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .title-row
+{
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-s);
+	min-width: 0;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .title-row > .name
+{
+	margin: 0;
+	font-size: 40px;
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: -0.025em;
+	color: var(--ot-text-1);
+	font-variation-settings: 'opsz' 144;
+	min-width: 0;
+	word-break: break-word;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .title-row > .verified
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	color: var(--ot-blue);
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .title-row > .verified > i
+{
+	font-size: 26px;
+	font-variation-settings: 'FILL' 1;
+}
+
+/* Sub row */
+
+.e-d29803b > .box > .body > .head > .head-text > .sub
+{
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--ot-spacing-s);
+	font-size: 13px;
+	color: var(--ot-text-2);
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .version
+{
+	font-family: 'SF Mono', Monaco, monospace;
+	font-weight: 500;
+	color: var(--ot-text-2);
+	font-variant-numeric: tabular-nums;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .platforms
+{
+	color: var(--ot-text-2);
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .dot-sep
+{
+	display: inline-block;
+	width: 3px;
+	height: 3px;
+	border-radius: 100px;
+	background: var(--ot-text-3);
+	opacity: 0.5;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-marketplace,
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-draft
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-weight: 600;
+}
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-marketplace { color: var(--ot-blue); }
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-draft       { color: var(--ot-text-3); }
+
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-marketplace > i,
+.e-d29803b > .box > .body > .head > .head-text > .sub > .sub-draft > i
+{
+	font-size: 15px;
+}
+
+/* Actions */
+
+.e-d29803b > .box > .body > .head > .right
+{
+	display: flex;
+	align-items: center;
+	gap: var(--ot-spacing-s);
+	flex-shrink: 0;
+}
+
+/* ===== DESCRIPTION ===== */
+
+.e-d29803b > .box > .body > .description
+{
+	margin: 0;
+	max-width: 720px;
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--ot-text-2);
+}
+
+/* ===== TAGS SLOT ===== */
+
+.e-d29803b > .box > .body > .tags
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--ot-spacing-s);
+	padding-top: var(--ot-spacing-s);
+	border-top: 1px solid var(--ot-bg-3-border);
+}
+
+/* ===== SIZE ===== */
+
+.e-d29803b > .box.size-m
+{
+	padding: var(--ot-spacing-m);
+}
+
+.e-d29803b > .box.size-m > .body > .head > .icon
+{
+	width: 56px;
+	height: 56px;
+}
+
+.e-d29803b > .box.size-m > .body > .head > .icon > i
+{
+	font-size: 28px;
+}
+
+.e-d29803b > .box.size-m > .body > .head > .head-text > .title-row > .name
+{
+	font-size: 30px;
+}
+
+.e-d29803b > .box.size-m > .body > .description
+{
+	font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media screen and (max-width: 720px)
+{
+	.e-d29803b > .box > .body > .head
+	{
+		flex-wrap: wrap;
+	}
+
+	.e-d29803b > .box > .body > .head > .head-text > .title-row > .name
+	{
+		font-size: 30px;
+	}
+
+	.e-d29803b > .box > .body > .head > .right
+	{
+		width: 100%;
+		justify-content: flex-start;
+	}
+}

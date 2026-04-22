@@ -3,6 +3,8 @@ import logs from '#shared/logs/addon.js';
 
 onetype.EmitOn('servers.remove', async function({ server, cleanup })
 {
+	console.log('Server removed:', server.Get('name'), cleanup ? '(with cleanup)' : '');
+
 	await logs.Fn('write', {
 		team: server.Get('team_id'),
 		server: server.Get('id'),

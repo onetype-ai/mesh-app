@@ -13,11 +13,15 @@
     "imports": {
         "#shared/*": "./shared/addons/*",
         "#auth/*": "./back/services/auth/*",
+        "#agents/*": "./back/addons/agents/*",
         "#servers/*": "./back/addons/servers/*",
         "#scripts/*": "./back/addons/scripts/*",
         "#approvals/*": "./back/addons/approvals/*",
         "#packages/*": "./back/addons/packages/*",
-        "#logs/*": "./back/addons/logs/*"
+        "#logs/*": "./back/addons/logs/*",
+        "#gateways/*": "./back/addons/gateways/*",
+        "#services/*": "./back/addons/services/*",
+        "#marketplace/*": "./back/addons/marketplace/*"
     },
     "dependencies": {
         "@onetype/framework": "^2.0.55"

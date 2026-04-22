@@ -11,7 +11,17 @@ onetype.MiddlewareIntercept('servers.http.request', async (middleware) =>
         return await middleware.next();
     }
 
-    const token = onetype.CookieGet('ot_session', http.request) || http.request.headers.authorization;
+    let token = onetype.CookieGet('ot_session', http.request);
+
+    if(!token)
+    {
+        const header = http.request.headers['authorization'] || http.request.headers['Authorization'];
+
+        if(header && header.startsWith('Bearer '))
+        {
+            token = header.substring(7).trim();
+        }
+    }
 
     if(!token)
     {
@@ -19,6 +29,7 @@ onetype.MiddlewareIntercept('servers.http.request', async (middleware) =>
     }
 
     const result = await commands.Fn('run', 'service:auth:me', { token });
+
 
     if(result.code === 200)
     {

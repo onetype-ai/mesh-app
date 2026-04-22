@@ -13,45 +13,25 @@ onetype.AddonReady('pages', (pages) =>
 		},
 		data: async function()
 		{
-			const [packagesList, scriptsList] = await Promise.all([
+			const [packagesList, usageList, serversList] = await Promise.all([
 				packages.Find()
 					.sort('created_at', 'desc')
 					.limit(1000)
 					.many(),
-				scripts.Find()
-					.select(['id', 'package_id', 'name'])
+				servers.packages.Find()
+					.limit(5000)
+					.many(),
+				servers.Find()
 					.sort('name', 'asc')
 					.limit(1000)
 					.many()
 			]);
 
-			const scriptsByPackage = {};
-
-			for(const script of scriptsList)
-			{
-				const packageId = script.Get('package_id');
-
-				if(!packageId)
-				{
-					continue;
-				}
-
-				if(!scriptsByPackage[packageId])
-				{
-					scriptsByPackage[packageId] = [];
-				}
-
-				scriptsByPackage[packageId].push(script.data);
-			}
-
-			const items = packagesList.map((item) =>
-			{
-				const data = item.data;
-				data.scripts = scriptsByPackage[data.id] || [];
-				return data;
-			});
-
-			return { items };
+			return {
+				items: packagesList.map((item) => item.GetData()),
+				usage: usageList.map((row) => row.GetData()),
+				fleet: serversList.map((server) => server.GetData())
+			};
 		},
 		areas:
 		{
@@ -72,11 +52,34 @@ onetype.AddonReady('pages', (pages) =>
 			{
 				this.items = data.items;
 
+				this.getServers = (pkg) =>
+				{
+					return data.usage
+						.filter((entry) => entry.package_id === pkg.id)
+						.map((entry) => data.fleet.find((server) => server.id === entry.server_id))
+						.filter((server) => !!server);
+				};
+
+				this.getTags = (pkg) =>
+				{
+					return this.getServers(pkg).map((server) =>
+					{
+						return {
+							id: server.id,
+							label: server.name,
+							icon: 'dns',
+							color: server.status === 'Active' ? 'green' : null
+						};
+					});
+				};
+
+				this.popup = () => '<div style="padding: 16px;">Coming soon…</div>';
+
 				return /* html */ `
 					<div class="ot-container-l ot-py-l ot-flex-vertical">
 						<e-global-heading
 							title="Packages"
-							description="System-level tools installed on your servers — git, docker, nvidia-driver and more."
+							description="System-level tools installed on your servers — git, docker, drivers, language runtimes."
 							size="m"
 						></e-global-heading>
 
@@ -84,13 +87,33 @@ onetype.AddonReady('pages', (pages) =>
 							ot-if="items.length === 0"
 							icon="inventory_2"
 							title="No packages yet"
-							description="Install your first package to manage tools across your fleet."
+							description="Import your first package from the marketplace."
 						></e-status-empty>
 
 						<div ot-if="items.length > 0" class="ot-grid-auto-l">
-							<a ot-for="item in items" :href="'/packages/' + item.id">
-								<e-package-card :item="item"></e-package-card>
-							</a>
+							<e-package-card ot-for="item in items" :item="item">
+								<div ot-if="getTags(item).length" slot="tags">
+									<e-global-tags :items="getTags(item)" tone="pills" size="s"></e-global-tags>
+								</div>
+
+								<div slot="actions">
+									<e-form-button
+										text="Edit"
+										icon="edit"
+										tone="ghost"
+										size="s"
+										:href="'/creator/packages/' + item.id"
+									></e-form-button>
+									<e-form-button
+										text="Install"
+										icon="download"
+										color="brand"
+										tone="soft"
+										size="s"
+										:ot-popup="popup"
+									></e-form-button>
+								</div>
+							</e-package-card>
 						</div>
 					</div>
 				`;
