@@ -5,6 +5,7 @@ import scripts from '#shared/scripts/addon.js';
 
 onetype.Pipeline('servers:services:stop', {
 	description: 'Stop a deployed service — requires the service to be deployed first.',
+	timeout: 1800000,
 	in: {
 		server_id: ['string', null, true],
 		service_id: ['string', null, true],

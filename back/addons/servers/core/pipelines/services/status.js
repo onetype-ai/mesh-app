@@ -5,6 +5,7 @@ import scripts from '#shared/scripts/addon.js';
 
 onetype.Pipeline('servers:services:status', {
 	description: 'Run the status script for a deployed service — refreshes metrics.',
+	timeout: 1800000,
 	in: {
 		server_id: ['string', null, true],
 		service_id: ['string', null, true],

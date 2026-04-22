@@ -73,7 +73,34 @@ onetype.AddonReady('pages', (pages) =>
 					});
 				};
 
-				this.popup = () => '<div style="padding: 16px;">Coming soon…</div>';
+				this.deploy = async (service) =>
+				{
+					const serverId = await $ot.confirm('Deploy ' + service.name, 'Enter the server ID to deploy this service on.', {
+						icon: 'dns',
+						input: true,
+						placeholder: 'Server ID…',
+						confirm: 'Deploy',
+						cancel: 'Cancel'
+					});
+
+					if(!serverId)
+					{
+						return;
+					}
+
+					const { code, message } = await $ot.command('servers:services:deploy', {
+						server_id: String(serverId).trim(),
+						service_id: service.id
+					}, true);
+
+					if(code !== 200)
+					{
+						$ot.toast({ message, type: 'error' });
+						return;
+					}
+
+					$ot.toast({ message: service.name + ' deployed.', type: 'success' });
+				};
 
 				return /* html */ `
 					<div class="ot-container-l ot-py-l ot-flex-vertical">
@@ -110,7 +137,7 @@ onetype.AddonReady('pages', (pages) =>
 										color="brand"
 										tone="soft"
 										size="s"
-										:ot-popup="popup"
+										:_click="() => deploy(item)"
 									></e-form-button>
 								</div>
 							</e-service-card>

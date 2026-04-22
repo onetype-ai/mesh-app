@@ -5,6 +5,7 @@ import scripts from '#shared/scripts/addon.js';
 
 onetype.Pipeline('servers:services:destroy', {
 	description: 'Destroy a service on a server — runs the destroy script then soft-deletes the servers_services row. Blocks if bash fails.',
+	timeout: 1800000,
 	in: {
 		server_id: ['string', null, true],
 		service_id: ['string', null, true],

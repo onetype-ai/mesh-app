@@ -5,6 +5,7 @@ import scripts from '#shared/scripts/addon.js';
 
 onetype.Pipeline('servers:services:deploy', {
 	description: 'Deploy a service on a server — runs the deploy script then creates a row in servers_services.',
+	timeout: 1800000,
 	in: {
 		server_id: ['string', null, true],
 		service_id: ['string', null, true],
