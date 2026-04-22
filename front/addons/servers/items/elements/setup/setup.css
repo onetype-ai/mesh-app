@@ -17,6 +17,20 @@
 	border-radius: var(--ot-radius-l);
 }
 
+/* ===== Generate / Regenerate token ===== */
+
+.e-6d505377 .generate
+{
+	display: flex;
+}
+
+.e-6d505377 .regenerate
+{
+	display: flex;
+	justify-content: flex-end;
+	margin-top: var(--ot-spacing-s);
+}
+
 /* ===== Test step ===== */
 
 .e-6d505377 .test

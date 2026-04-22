@@ -78,8 +78,7 @@ onetype.Pipeline('servers:create', {
 	{
 		const server = servers.Item({
 			team_id,
-			name,
-			token: onetype.GenerateString(64)
+			name
 		});
 
 		await server.Create({ connection: this.wrap.transaction });

@@ -72,12 +72,17 @@ Tick the box as you complete. Keep items in priority order within each section.
 - **Effort:** 3-4 hours
 - **Why blocker:** the 64-char registration token and every bash stdout/stderr currently travel unencrypted. Passive MITM on any hop between agent and gateway clones the server. Absolute no-go for production.
 
-### 8. Server `token` leaks via `/api/servers` response
-- [ ] `GetData()` strips (or `select([...])` whitelists) `token` field on any outbound server record
-- [ ] Audit every addon `Expose({ select: [...] })` and individual command `resolve(item.GetData())` path for secrets leaking through the `GetData` default
-- [ ] Add a `hidden: true` field flag in the framework so fields like `token` can never be serialised to HTTP response
+### 8. Server `token` leaks via `/api/servers` response ✅
+- [x] Removed `token` from `back/addons/servers/core/expose.js` select list — never serialised by Expose
+- [x] All 5 custom server command handlers (`one`, `many`, `create`, `update`, `delete`) strip `token` before resolve
+- [x] `servers:create` pipeline no longer auto-generates a token; new servers start with `token: null`
+- [x] New `POST /api/servers/:id/token` command generates a 192-char (768-bit) hex token via `crypto.randomBytes(96)` and returns it once; regeneration invalidates the old token
+- [x] Frontend setup page: "Generate install token" button; install command hidden until user clicks; "Regenerate" button available after. Token is held only in element state, never refetched.
+- [x] `$ot.confirm` on Regenerate warning: "invalidates current token; agent keeps running until restart/reconnect, then gets rejected; reinstall + restart recommended"
+- [ ] Still pending: `hidden: true` field flag in framework so fields like this can never be serialised by default (framework change, bigger scope)
 - **Effort:** 2 hours
 - **Why blocker:** any team member (or a stolen session) can read the agent registration token and attach a rogue agent impersonating that server. Effectively team-wide RCE.
+- **Done:** verified `GET /api/servers/30` and `GET /api/servers` no longer include `token`; `POST /api/servers/30/token` returns a fresh 192-char token.
 
 ### 9. `agents:bash` is full RCE fleetwide when passphrase is unset
 - [ ] Agent refuses to register without a passphrase in production mode (add `--require-passphrase` default true in release builds)

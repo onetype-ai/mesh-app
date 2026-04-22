@@ -26,6 +26,8 @@ onetype.AddonReady('elements', (elements) =>
 			this.testing = false;
 			this.tested = false;
 			this.connected = false;
+			this.token = '';
+			this.generating = false;
 
 			/* ===== DERIVED ===== */
 
@@ -57,7 +59,7 @@ onetype.AddonReady('elements', (elements) =>
 			{
 				const gateway = this.resolveGateway();
 
-				if(!gateway || !this.item)
+				if(!gateway || !this.item || !this.token)
 				{
 					return '';
 				}
@@ -65,7 +67,7 @@ onetype.AddonReady('elements', (elements) =>
 				const parts =
 				[
 					'curl -fsSL https://mesh.onetype.ai/install.sh | sudo',
-					'MESH_TOKEN=' + this.item.token,
+					'MESH_TOKEN=' + this.token,
 					'MESH_GATEWAY=' + gateway.host + ':' + gateway.port
 				];
 
@@ -100,6 +102,34 @@ onetype.AddonReady('elements', (elements) =>
 				this.connected = code === 200 && data && data.connected === true;
 				this.tested = true;
 				this.testing = false;
+			};
+
+			this.generateToken = async () =>
+			{
+				const confirmed = await $ot.confirm(
+					'Generate install token',
+					'This invalidates any previous token for this server. If an agent is already connected it keeps running, but the moment it restarts or reconnects it will be rejected. You will need to reinstall the agent with the new token — restarting the agent right after generating is recommended.',
+					{ confirm: 'Generate', cancel: 'Cancel', color: 'red' }
+				);
+
+				if(!confirmed)
+				{
+					return;
+				}
+
+				this.generating = true;
+
+				const { data, code, message } = await $ot.command('servers:token', { id: this.item.id }, true);
+
+				if(code !== 200)
+				{
+					$ot.toast({ message, type: 'error' });
+					this.generating = false;
+					return;
+				}
+
+				this.token = data.token;
+				this.generating = false;
 			};
 
 			/* ===== RENDER ===== */
@@ -151,17 +181,41 @@ onetype.AddonReady('elements', (elements) =>
 					<e-form-section
 						eyebrow="Step 3"
 						title="Run this on your machine"
-						description="Copy the command and paste it into a terminal on the target Linux or macOS box. The agent will install as a service and dial the gateway."
+						description="Generate a token, then copy the command into a terminal on the target Linux or macOS box. The token is shown only once — save it somewhere safe. Regenerating invalidates the old one."
 						:variant="['clean']"
 					>
 						<div slot="content">
-							<e-global-code
-								:source="buildCommand()"
-								language="bash"
-								filename="install.sh"
-								background="bg-3"
-								size="m"
-							></e-global-code>
+							<div ot-if="!token" class="generate">
+								<e-form-button
+									text="Generate install token"
+									icon="vpn_key"
+									color="brand"
+									tone="solid"
+									:loading="generating"
+									:_click="generateToken"
+								></e-form-button>
+							</div>
+
+							<div ot-if="token">
+								<e-global-code
+									:source="buildCommand()"
+									language="bash"
+									filename="install.sh"
+									background="bg-3"
+									size="m"
+								></e-global-code>
+
+								<div class="regenerate">
+									<e-form-button
+										text="Regenerate token"
+										icon="refresh"
+										tone="ghost"
+										size="s"
+										:loading="generating"
+										:_click="generateToken"
+									></e-form-button>
+								</div>
+							</div>
 						</div>
 					</e-form-section>
 

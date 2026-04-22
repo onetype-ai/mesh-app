@@ -29,6 +29,7 @@ import './items/commands/services/stop.js';
 import './items/commands/services/restart.js';
 import './items/commands/services/status.js';
 import './items/commands/ping.js';
+import './items/commands/token.js';
 
 import './core/pipelines/update.js';
 import './core/pipelines/create.js';

@@ -37,6 +37,10 @@ commands.Item({
 		item.Set('deleted_at', new Date().toISOString());
 		await item.Update();
 
-		resolve(item.GetData());
+		const data = item.GetData();
+
+		delete data.token;
+
+		resolve(data);
 	}
 });

@@ -4,7 +4,7 @@ servers.Expose({
 	filter: ['id', 'team_id', 'status'],
 	sort: ['name', 'created_at', 'updated_at'],
 	select: [
-		'id', 'team_id', 'name', 'token',
+		'id', 'team_id', 'name',
 		'metrics', 'system_static', 'system_dynamic', 'system_refresh', 'status',
 		'updated_at', 'created_at'
 	],

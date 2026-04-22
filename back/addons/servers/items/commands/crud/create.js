@@ -33,6 +33,10 @@ commands.Item({
 			return resolve(null, result.message, result.code);
 		}
 
-		resolve(result.data.server.GetData());
+		const data = result.data.server.GetData();
+
+		delete data.token;
+
+		resolve(data);
 	}
 });

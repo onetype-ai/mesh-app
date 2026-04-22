@@ -42,6 +42,10 @@ commands.Item({
 
 		await item.Update({ whitelist: fields });
 
-		resolve(item.GetData());
+		const data = item.GetData();
+
+		delete data.token;
+
+		resolve(data);
 	}
 });

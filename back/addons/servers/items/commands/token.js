@@ -1,15 +1,18 @@
+import crypto from 'crypto';
 import commands from '@onetype/framework/commands';
 import servers from '#shared/servers/addon.js';
 
 commands.Item({
-	id: 'servers:one',
+	id: 'servers:token',
 	exposed: true,
-	method: 'GET',
-	endpoint: '/api/servers/:id',
+	method: 'POST',
+	endpoint: '/api/servers/:id/token',
 	in: {
 		id: ['string', null, true]
 	},
-	out: 'server',
+	out: {
+		token: ['string', null, true]
+	},
 	callback: async function(properties, resolve)
 	{
 		if(!this.http.state.user)
@@ -17,20 +20,22 @@ commands.Item({
 			return resolve(null, 'Login required.', 401);
 		}
 
-		const item = await servers.Find()
+		const server = await servers.Find()
 			.filter('id', properties.id)
 			.filter('team_id', this.http.state.user.team.id)
+			.filter('deleted_at', null, 'NULL')
 			.one();
 
-		if(!item)
+		if(!server)
 		{
 			return resolve(null, 'Server not found.', 404);
 		}
 
-		const data = item.GetData();
+		const token = crypto.randomBytes(96).toString('hex');
 
-		delete data.token;
+		server.Set('token', token);
+		await server.Update({ whitelist: ['token'] });
 
-		resolve(data);
+		resolve({ token });
 	}
 });

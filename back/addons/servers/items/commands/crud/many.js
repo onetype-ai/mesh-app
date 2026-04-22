@@ -45,7 +45,12 @@ commands.Item({
 		]);
 
 		resolve({
-			items: items.map((item) => item.GetData()),
+			items: items.map((item) =>
+			{
+				const data = item.GetData();
+				delete data.token;
+				return data;
+			}),
 			total,
 			page: properties.page,
 			limit: properties.limit
