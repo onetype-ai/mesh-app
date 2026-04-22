@@ -10,19 +10,26 @@ onetype.PipelineOn('commit', 'marketplace:import:package', async function(pipeli
 	const pkg    = properties.package;
 	const source = properties.source;
 	const user   = this.state && this.state.user;
+	const actor_ip    = this.state && this.state.actor_ip    ? this.state.actor_ip    : null;
+	const actor_agent = this.state && this.state.actor_agent ? this.state.actor_agent : null;
+
+	const team_id = properties.team_id;
+	const action  = 'marketplace.package.import';
 
 	await onetype.PipelineRun('logs:write', {
-		team_id:        properties.team_id,
+		team_id,
 		user:           user ? { id: user.id, name: user.name, email: user.email } : null,
+		actor_ip,
+		actor_agent,
 		correlation_id: result.id.root,
-		action:         'marketplace.package.import',
+		action,
 		level:          'Info',
 		target_type:    'Package',
 		target_id:      pkg ? pkg.Get('id') : null,
 		reference_type: 'Package',
 		reference_id:   source ? source.Get('id') : properties.package_id,
 		time:           Math.round(parseFloat(result.time))
-	});
+	}, { lock: 'logs:write:' + team_id + ':' + action });
 });
 
 onetype.PipelineOn('rollback', 'marketplace:import:package', async function(pipeline, result, properties, error)
@@ -33,12 +40,19 @@ onetype.PipelineOn('rollback', 'marketplace:import:package', async function(pipe
 	}
 
 	const user = this.state && this.state.user;
+	const actor_ip    = this.state && this.state.actor_ip    ? this.state.actor_ip    : null;
+	const actor_agent = this.state && this.state.actor_agent ? this.state.actor_agent : null;
+
+	const team_id = properties.team_id;
+	const action  = 'marketplace.package.import';
 
 	await onetype.PipelineRun('logs:write', {
-		team_id:        properties.team_id,
+		team_id,
 		user:           user ? { id: user.id, name: user.name, email: user.email } : null,
+		actor_ip,
+		actor_agent,
 		correlation_id: result.id.root,
-		action:         'marketplace.package.import',
+		action,
 		level:          'Error',
 		target_type:    'Package',
 		reference_type: 'Package',
@@ -46,5 +60,5 @@ onetype.PipelineOn('rollback', 'marketplace:import:package', async function(pipe
 		code:           error.code,
 		time:           Math.round(parseFloat(result.time)),
 		output:         { message: error.message, join: error.join }
-	});
+	}, { lock: 'logs:write:' + team_id + ':' + action });
 });

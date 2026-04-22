@@ -8,19 +8,26 @@ onetype.PipelineOn('commit', 'servers:scripts:attach', async function(pipeline, 
 	}
 
 	const user = this.state && this.state.user;
+	const actor_ip    = this.state && this.state.actor_ip    ? this.state.actor_ip    : null;
+	const actor_agent = this.state && this.state.actor_agent ? this.state.actor_agent : null;
+
+	const team_id = properties.team_id;
+	const action  = 'servers.scripts.attach';
 
 	await onetype.PipelineRun('logs:write', {
-		team_id:        properties.team_id,
+		team_id,
 		user:           user ? { id: user.id, name: user.name, email: user.email } : null,
+		actor_ip,
+		actor_agent,
 		correlation_id: result.id.root,
-		action:         'servers.scripts.attach',
+		action,
 		level:          'Info',
 		target_type:    'Server',
 		target_id:      properties.server_id,
 		reference_type: 'Script',
 		reference_id:   properties.script_id,
 		time:           Math.round(parseFloat(result.time))
-	});
+	}, { lock: 'logs:write:' + team_id + ':' + action });
 });
 
 onetype.PipelineOn('rollback', 'servers:scripts:attach', async function(pipeline, result, properties, error)
@@ -31,12 +38,19 @@ onetype.PipelineOn('rollback', 'servers:scripts:attach', async function(pipeline
 	}
 
 	const user = this.state && this.state.user;
+	const actor_ip    = this.state && this.state.actor_ip    ? this.state.actor_ip    : null;
+	const actor_agent = this.state && this.state.actor_agent ? this.state.actor_agent : null;
+
+	const team_id = properties.team_id;
+	const action  = 'servers.scripts.attach';
 
 	await onetype.PipelineRun('logs:write', {
-		team_id:        properties.team_id,
+		team_id,
 		user:           user ? { id: user.id, name: user.name, email: user.email } : null,
+		actor_ip,
+		actor_agent,
 		correlation_id: result.id.root,
-		action:         'servers.scripts.attach',
+		action,
 		level:          'Error',
 		target_type:    'Server',
 		target_id:      properties.server_id,
@@ -45,5 +59,5 @@ onetype.PipelineOn('rollback', 'servers:scripts:attach', async function(pipeline
 		code:           error.code,
 		time:           Math.round(parseFloat(result.time)),
 		output:         { message: error.message, join: error.join }
-	});
+	}, { lock: 'logs:write:' + team_id + ':' + action });
 });
