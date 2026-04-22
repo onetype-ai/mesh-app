@@ -19,6 +19,7 @@ import './items/commands/crud/many.js';
 import './items/commands/publish.js';
 import './items/commands/unpublish.js';
 import './core/pipelines/publish.js';
+import './core/pipelines/unpublish.js';
 import './core/pipelines/duplicate.js';
 
 export default scripts;

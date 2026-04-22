@@ -1,3 +1,4 @@
+import onetype from '@onetype/framework';
 import commands from '@onetype/framework/commands';
 import scripts from '#shared/scripts/addon.js';
 
@@ -27,9 +28,18 @@ commands.Item({
 			return resolve(null, 'Script not found.', 404);
 		}
 
-		item.Set('status', 'Draft');
-		await item.Update();
+		const result = await onetype.PipelineRun('scripts:unpublish', { id: properties.id }, { state: this.http.state });
 
-		resolve(item.GetData());
+		if(result.code !== 200)
+		{
+			return resolve(null, result.message, result.code);
+		}
+
+		const fresh = await scripts.Find()
+			.filter('id', properties.id)
+			.filter('team_id', this.http.state.user.team.id)
+			.one();
+
+		resolve(fresh ? fresh.GetData() : item.GetData());
 	}
 });
