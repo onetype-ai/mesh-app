@@ -11,29 +11,33 @@ onetype.MiddlewareIntercept('servers.http.request', async (middleware) =>
         return await middleware.next();
     }
 
-    let token = onetype.CookieGet('ot_session', http.request);
-
-    if(!token)
+    try
     {
-        const header = http.request.headers['authorization'] || http.request.headers['Authorization'];
+        let token = onetype.CookieGet('ot_session', http.request);
 
-        if(header && header.startsWith('Bearer '))
+        if(!token)
         {
-            token = header.substring(7).trim();
+            const header = http.request.headers['authorization'] || http.request.headers['Authorization'];
+
+            if(header && header.startsWith('Bearer '))
+            {
+                token = header.substring(7).trim();
+            }
+        }
+
+        if(token)
+        {
+            const result = await commands.Fn('run', 'service:auth:me', { token });
+
+            if(result.code === 200)
+            {
+                http.state.user = { ...result.data.user, team: result.data.team };
+            }
         }
     }
-
-    if(!token)
+    catch(error)
     {
-        return await middleware.next();
-    }
-
-    const result = await commands.Fn('run', 'service:auth:me', { token });
-
-
-    if(result.code === 200)
-    {
-        http.state.user = { ...result.data.user, team: result.data.team };
+        console.error('[auth http middleware]', path, error);
     }
 
     await middleware.next();
