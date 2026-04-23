@@ -38,9 +38,9 @@ onetype.AddonReady('elements', (elements) =>
 						placement: 'top',
 						items:
 						[
-							{ icon: 'terminal', label: 'Scripts', href: base + '/scripts' },
+							{ icon: 'deployed_code', label: 'Services', href: base + '/services' },
 							{ icon: 'inventory_2', label: 'Packages', href: base + '/packages' },
-							{ icon: 'deployed_code', label: 'Services', href: base + '/services' }
+							{ icon: 'terminal', label: 'Scripts', href: base + '/scripts' }
 						]
 					},
 					{

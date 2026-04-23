@@ -6,9 +6,9 @@ onetype.AddonReady('pages', (pages) =>
 		title: 'Packages',
 		grid:
 		{
-			template: '"sidebar navbar navbar" "sidebar server main"',
+			template: '"sidebar navbar navbar" "sidebar server main" "sidebar server terminal"',
 			columns: '68px 260px 1fr',
-			rows: 'auto 1fr',
+			rows: 'auto 1fr 300px',
 			gap: '0'
 		},
 		data: async function(parameters)
@@ -108,6 +108,14 @@ onetype.AddonReady('pages', (pages) =>
 							</e-package-card>
 						</div>
 					</div>
+				`;
+			},
+			terminal: function({ data })
+			{
+				this.server = data.server;
+
+				return /* html */ `
+					<e-terminal :server="server.id" :readonly="true" background="bg-2" :variant="['border-top']"></e-terminal>
 				`;
 			}
 		}

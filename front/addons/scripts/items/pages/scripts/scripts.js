@@ -6,32 +6,23 @@ onetype.AddonReady('pages', (pages) =>
 		title: 'Scripts',
 		grid:
 		{
-			template: '"sidebar navbar" "sidebar main"',
+			template: '"sidebar navbar" "sidebar main" "sidebar terminal"',
 			columns: '68px 1fr',
-			rows: 'auto 1fr',
+			rows: 'auto 1fr 300px',
 			gap: '0'
 		},
 		data: async function()
 		{
-			const [scriptsList, usageList, serversList] = await Promise.all([
-				scripts.Find()
-					.filter('package_id', null, 'NULL')
-					.sort('created_at', 'desc')
-					.limit(1000)
-					.many(),
-				servers.scripts.Find()
-					.limit(5000)
-					.many(),
-				servers.Find()
-					.sort('name', 'asc')
-					.limit(1000)
-					.many()
+			const [list, usage, fleet] = await Promise.all([
+				scripts.Find().filter('package_id', null, 'NULL').sort('created_at', 'desc').limit(1000).many(),
+				servers.scripts.Find().limit(5000).many(),
+				servers.Find().sort('name', 'asc').limit(1000).many()
 			]);
 
 			return {
-				items: scriptsList.map((item) => item.GetData()),
-				usage: usageList.map((row) => row.GetData()),
-				fleet: serversList.map((server) => server.GetData())
+				items: list.map((item) => item.GetData()),
+				usage: usage.map((row) => row.GetData()),
+				fleet: fleet.map((server) => server.GetData())
 			};
 		},
 		areas:
@@ -42,39 +33,79 @@ onetype.AddonReady('pages', (pages) =>
 			},
 			navbar: function()
 			{
-				this.crumbs =
-				[
-					{ icon: 'terminal', label: 'Scripts' }
-				];
+				this.crumbs = [{ icon: 'terminal', label: 'Scripts' }];
 
 				return `<e-navbar :crumbs="crumbs"></e-navbar>`;
 			},
 			main: function({ data })
 			{
-				this.items = data.items;
+				this.items    = data.items;
+				this.attaching = false;
 
-				this.getServers = (script) =>
+				this.servers = (script) =>
 				{
 					return data.usage
 						.filter((entry) => entry.script_id === script.id)
 						.map((entry) => data.fleet.find((server) => server.id === entry.server_id))
-						.filter((server) => !!server);
+						.filter(Boolean);
 				};
 
-				this.getTags = (script) =>
+				this.tags = (script) =>
 				{
-					return this.getServers(script).map((server) =>
-					{
-						return {
-							id: server.id,
-							label: server.name,
-							icon: 'dns',
-							color: server.is_connected === true ? 'green' : null
-						};
-					});
+					return this.servers(script).map((server) => ({
+						id:    server.id,
+						label: server.name,
+						icon:  'dns',
+						color: server.is_connected ? 'green' : null
+					}));
 				};
 
-				this.popup = () => '<div style="padding: 16px;">Coming soon…</div>';
+				this.attach = async (script) =>
+				{
+					if(this.attaching)
+					{
+						return;
+					}
+
+					const answer = await $ot.confirm('Attach ' + script.name, 'Enter the server ID to attach this script to.', {
+						icon:        'dns',
+						input:       true,
+						placeholder: 'Server ID…',
+						confirm:     'Attach',
+						cancel:      'Cancel'
+					});
+
+					if(!answer)
+					{
+						return;
+					}
+
+					const server = String(answer).trim();
+
+					this.attaching = true;
+					this.Emit('scripts.terminal.open', { server });
+
+					try
+					{
+						const { code, message } = await $ot.command('servers:scripts:attach', {
+							server_id: server,
+							script_id: script.id
+						}, true);
+
+						if(code !== 200)
+						{
+							$ot.toast({ message, type: 'error' });
+							return;
+						}
+
+						$ot.toast({ message: script.name + ' attached.', type: 'success' });
+					}
+					finally
+					{
+						this.attaching = false;
+						setTimeout(() => this.Emit('scripts.terminal.close'), 10000);
+					}
+				};
 
 				return /* html */ `
 					<div class="ot-container-l ot-py-l ot-flex-vertical">
@@ -93,8 +124,8 @@ onetype.AddonReady('pages', (pages) =>
 
 						<div ot-if="items.length > 0" class="ot-grid-auto-l">
 							<e-script-card ot-for="item in items" :item="item">
-								<div ot-if="getTags(item).length" slot="tags">
-									<e-global-tags :items="getTags(item)" tone="pills" size="s"></e-global-tags>
+								<div ot-if="tags(item).length" slot="tags">
+									<e-global-tags :items="tags(item)" tone="pills" size="s"></e-global-tags>
 								</div>
 
 								<div slot="actions">
@@ -111,12 +142,31 @@ onetype.AddonReady('pages', (pages) =>
 										color="brand"
 										tone="soft"
 										size="s"
-										:ot-popup="popup"
+										:loading="attaching"
+										:_click="() => attach(item)"
 									></e-form-button>
 								</div>
 							</e-script-card>
 						</div>
 					</div>
+				`;
+			},
+			terminal: function()
+			{
+				this.server = '';
+
+				this.On('scripts.terminal.open', ({ server }) =>
+				{
+					this.server = server;
+				});
+
+				this.On('scripts.terminal.close', () =>
+				{
+					this.server = '';
+				});
+
+				return /* html */ `
+					<e-terminal :server="server" :readonly="true" :empty="true" background="bg-2" :variant="['border-top']"></e-terminal>
 				`;
 			}
 		}

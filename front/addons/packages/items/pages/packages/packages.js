@@ -6,31 +6,23 @@ onetype.AddonReady('pages', (pages) =>
 		title: 'Packages',
 		grid:
 		{
-			template: '"sidebar navbar" "sidebar main"',
+			template: '"sidebar navbar" "sidebar main" "sidebar terminal"',
 			columns: '68px 1fr',
-			rows: 'auto 1fr',
+			rows: 'auto 1fr 300px',
 			gap: '0'
 		},
 		data: async function()
 		{
-			const [packagesList, usageList, serversList] = await Promise.all([
-				packages.Find()
-					.sort('created_at', 'desc')
-					.limit(1000)
-					.many(),
-				servers.packages.Find()
-					.limit(5000)
-					.many(),
-				servers.Find()
-					.sort('name', 'asc')
-					.limit(1000)
-					.many()
+			const [list, usage, fleet] = await Promise.all([
+				packages.Find().sort('created_at', 'desc').limit(1000).many(),
+				servers.packages.Find().limit(5000).many(),
+				servers.Find().sort('name', 'asc').limit(1000).many()
 			]);
 
 			return {
-				items: packagesList.map((item) => item.GetData()),
-				usage: usageList.map((row) => row.GetData()),
-				fleet: serversList.map((server) => server.GetData())
+				items: list.map((item) => item.GetData()),
+				usage: usage.map((row) => row.GetData()),
+				fleet: fleet.map((server) => server.GetData())
 			};
 		},
 		areas:
@@ -41,65 +33,78 @@ onetype.AddonReady('pages', (pages) =>
 			},
 			navbar: function()
 			{
-				this.crumbs =
-				[
-					{ icon: 'inventory_2', label: 'Packages' }
-				];
+				this.crumbs = [{ icon: 'inventory_2', label: 'Packages' }];
 
 				return `<e-navbar :crumbs="crumbs"></e-navbar>`;
 			},
 			main: function({ data })
 			{
-				this.items = data.items;
+				this.items     = data.items;
+				this.installing = false;
 
-				this.getServers = (pkg) =>
+				this.servers = (pkg) =>
 				{
 					return data.usage
 						.filter((entry) => entry.package_id === pkg.id)
 						.map((entry) => data.fleet.find((server) => server.id === entry.server_id))
-						.filter((server) => !!server);
+						.filter(Boolean);
 				};
 
-				this.getTags = (pkg) =>
+				this.tags = (pkg) =>
 				{
-					return this.getServers(pkg).map((server) =>
-					{
-						return {
-							id: server.id,
-							label: server.name,
-							icon: 'dns',
-							color: server.is_connected === true ? 'green' : null
-						};
-					});
+					return this.servers(pkg).map((server) => ({
+						id:    server.id,
+						label: server.name,
+						icon:  'dns',
+						color: server.is_connected ? 'green' : null
+					}));
 				};
 
 				this.install = async (pkg) =>
 				{
-					const serverId = await $ot.confirm('Install ' + pkg.name, 'Enter the server ID to install this package on.', {
-						icon: 'dns',
-						input: true,
+					if(this.installing)
+					{
+						return;
+					}
+
+					const answer = await $ot.confirm('Install ' + pkg.name, 'Enter the server ID to install this package on.', {
+						icon:        'dns',
+						input:       true,
 						placeholder: 'Server ID…',
-						confirm: 'Install',
-						cancel: 'Cancel'
+						confirm:     'Install',
+						cancel:      'Cancel'
 					});
 
-					if(!serverId)
+					if(!answer)
 					{
 						return;
 					}
 
-					const { code, message } = await $ot.command('servers:packages:install', {
-						server_id: String(serverId).trim(),
-						package_id: pkg.id
-					}, true);
+					const server = String(answer).trim();
 
-					if(code !== 200)
+					this.installing = true;
+					this.Emit('packages.terminal.open', { server });
+
+					try
 					{
-						$ot.toast({ message, type: 'error' });
-						return;
-					}
+						const { code, message } = await $ot.command('servers:packages:install', {
+							server_id:  server,
+							package_id: pkg.id
+						}, true);
 
-					$ot.toast({ message: pkg.name + ' installed.', type: 'success' });
+						if(code !== 200)
+						{
+							$ot.toast({ message, type: 'error' });
+							return;
+						}
+
+						$ot.toast({ message: pkg.name + ' installed.', type: 'success' });
+					}
+					finally
+					{
+						this.installing = false;
+						setTimeout(() => this.Emit('packages.terminal.close'), 10000);
+					}
 				};
 
 				return /* html */ `
@@ -119,8 +124,8 @@ onetype.AddonReady('pages', (pages) =>
 
 						<div ot-if="items.length > 0" class="ot-grid-auto-l">
 							<e-package-card ot-for="item in items" :item="item">
-								<div ot-if="getTags(item).length" slot="tags">
-									<e-global-tags :items="getTags(item)" tone="pills" size="s"></e-global-tags>
+								<div ot-if="tags(item).length" slot="tags">
+									<e-global-tags :items="tags(item)" tone="pills" size="s"></e-global-tags>
 								</div>
 
 								<div slot="actions">
@@ -137,12 +142,31 @@ onetype.AddonReady('pages', (pages) =>
 										color="brand"
 										tone="soft"
 										size="s"
+										:loading="installing"
 										:_click="() => install(item)"
 									></e-form-button>
 								</div>
 							</e-package-card>
 						</div>
 					</div>
+				`;
+			},
+			terminal: function()
+			{
+				this.server = '';
+
+				this.On('packages.terminal.open', ({ server }) =>
+				{
+					this.server = server;
+				});
+
+				this.On('packages.terminal.close', () =>
+				{
+					this.server = '';
+				});
+
+				return /* html */ `
+					<e-terminal :server="server" :readonly="true" :empty="true" background="bg-2" :variant="['border-top']"></e-terminal>
 				`;
 			}
 		}
