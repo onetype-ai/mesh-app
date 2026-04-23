@@ -13,6 +13,33 @@ onetype.AddonReady('elements', (elements) =>
 				type: 'string',
 				value: '',
 				description: 'Optional server id. Empty shows merged output from every server in the team.'
+			},
+			readonly:
+			{
+				type: 'boolean',
+				value: false,
+				description: 'Hide the prompt and the notice — read-only live output.'
+			},
+			empty:
+			{
+				type: 'boolean',
+				value: false,
+				description: 'When true and no server is set, show an empty placeholder instead of streaming every server.'
+			},
+			background:
+			{
+				type: 'string',
+				value: 'bg-2',
+				options: ['bg-1', 'bg-2', 'bg-3', 'bg-4', 'transparent'],
+				description: 'Background depth.'
+			},
+			variant:
+			{
+				type: 'array',
+				value: ['border'],
+				each: { type: 'string' },
+				options: ['border', 'border-top', 'border-bottom'],
+				description: 'Visual modifiers.'
 			}
 		},
 		render: function()
@@ -25,6 +52,28 @@ onetype.AddonReady('elements', (elements) =>
 			this.pinned  = true;
 			this.input   = '';
 			this.running = false;
+
+			this.classes = () =>
+			{
+				const list = ['box', this.background];
+
+				if(this.variant.includes('border'))
+				{
+					list.push('border');
+				}
+
+				if(this.variant.includes('border-top'))
+				{
+					list.push('border-top');
+				}
+
+				if(this.variant.includes('border-bottom'))
+				{
+					list.push('border-bottom');
+				}
+
+				return list.join(' ');
+			};
 
 			/* ===== FORMATTERS ===== */
 
@@ -54,6 +103,11 @@ onetype.AddonReady('elements', (elements) =>
 
 			this.fetch = async () =>
 			{
+				if(this.empty && !this.server)
+				{
+					return;
+				}
+
 				const payload = {
 					last:  this.cursor,
 					limit: 200
@@ -245,8 +299,8 @@ onetype.AddonReady('elements', (elements) =>
 			/* ===== RENDER ===== */
 
 			return /* html */ `
-				<div class="box">
-					<div class="notice">
+				<div :class="classes()">
+					<div ot-if="!readonly" class="notice">
 						<i>bolt</i>
 						<span class="notice-text">
 							<strong>Fleet ops, not an interactive shell.</strong>
@@ -278,13 +332,20 @@ onetype.AddonReady('elements', (elements) =>
 
 					<div id="e-terminal-screen" class="screen" ot-scroll="handleScroll">
 						<e-status-empty
-							ot-if="lines.length === 0"
+							ot-if="empty && !server"
+							icon="dns"
+							title="No server selected"
+							description="Trigger an action to start streaming output."
+						></e-status-empty>
+
+						<e-status-empty
+							ot-if="(!empty || server) && lines.length === 0"
 							icon="pending"
 							title="Waiting for output"
 							description="Agent hasn't streamed any lines yet."
 						></e-status-empty>
 
-						<div ot-if="lines.length > 0" class="stream">
+						<div ot-if="(!empty || server) && lines.length > 0" class="stream">
 							<div ot-for="line in lines" class="line">
 								<span class="time">{{ formatTime(line.time) }}</span>
 								<span class="server">{{ line.server_name || ('#' + line.server) }}</span>
@@ -293,7 +354,7 @@ onetype.AddonReady('elements', (elements) =>
 						</div>
 					</div>
 
-					<div class="prompt" ot-keydown="handleKey">
+					<div ot-if="!readonly" class="prompt" ot-keydown="handleKey">
 						<e-form-textarea
 							:value="input"
 							:placeholder="server ? 'Type a command…' : 'Type a command — runs on every active server…'"
