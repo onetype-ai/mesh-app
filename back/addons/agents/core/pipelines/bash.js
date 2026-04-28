@@ -9,7 +9,8 @@ onetype.Pipeline('agents:bash', {
 		bash:       ['string', null, true],
 		passphrase: ['string', ''],
 		terminal:   ['boolean', true],
-		timeout:    ['number', 120000]
+		timeout:    ['number', 120000],
+		command_id: ['string', '']
 	},
 	out: {
 		stdout: ['string', ''],
@@ -39,25 +40,25 @@ onetype.Pipeline('agents:bash', {
 .Join('execute', 20, {
 	description: 'Run the bash command through the agent gRPC stream.',
 	requires: ['agent'],
-	callback: async ({ agent, bash, passphrase, terminal, timeout }, resolve) =>
+	callback: async ({ agent, bash, passphrase, terminal, timeout, command_id }, resolve) =>
 	{
-		const response = await agent.Get('bash')(bash, passphrase, terminal, timeout);
+		const response = await agent.Get('bash')(bash, passphrase, command_id || null, terminal, timeout);
 
 		if(response.code !== 200)
 		{
-			return resolve(null, response.message, response.code);
+			return resolve(response.data || null, response.message, response.code);
 		}
 
 		const data = onetype.DataDefine(response.data, {
 			stdout: ['string', ''],
 			stderr: ['string', ''],
-			code: ['number', 0, true]
+			code:   ['number', 0, true]
 		}, true);
 
 		return {
 			stdout: data.stdout,
 			stderr: data.stderr,
-			code: data.code
+			code:   data.code
 		};
 	}
 });

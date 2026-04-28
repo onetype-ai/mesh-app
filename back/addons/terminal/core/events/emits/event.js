@@ -4,6 +4,19 @@ import terminal from '#terminal/addon.js';
 
 const LIMIT = 1000;
 
+/*
+Captures every agent.terminal event from the gRPC stream and turns it
+into a terminal item. Two flavors arrive over the wire:
+
+  Line event (during exec):
+    { command_id, stream: stdout|stderr, sequence, output, time }
+
+  End event (after exec):
+    { command_id, end: true, code, time }
+
+Both are stored as items so the front-end can replay full history,
+filter by command_id, and tell finished commands from in-flight ones.
+*/
 onetype.EmitOn('agents.grpc.event', async ({ stream, payload, name }) =>
 {
 	if(name !== 'agent.terminal')
@@ -32,15 +45,21 @@ onetype.EmitOn('agents.grpc.event', async ({ stream, payload, name }) =>
 		return;
 	}
 
-	const data   = payload.data || {};
-	const output = typeof data.output === 'string' ? data.output : '';
-	const time   = typeof data.time   === 'string' ? data.time   : new Date().toISOString();
+	const data       = payload.data || {};
+	const command_id = typeof data.command_id === 'string' ? data.command_id : '';
+	const time       = typeof data.time === 'string' ? data.time : new Date().toISOString();
+	const isEnd      = data.end === true;
 
 	terminal.Item({
 		server:      String(server),
 		server_name: record.Get('name') || '',
-		output,
-		time
+		command_id,
+		stream:      isEnd ? '' : (typeof data.stream === 'string' ? data.stream : 'stdout'),
+		sequence:    typeof data.sequence === 'number' ? data.sequence : 0,
+		output:      isEnd ? '' : (typeof data.output === 'string' ? data.output : ''),
+		time,
+		end:         isEnd,
+		code:        isEnd && typeof data.code === 'number' ? data.code : 0
 	});
 
 	const all    = Object.values(terminal.Items());

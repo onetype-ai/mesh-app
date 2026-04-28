@@ -9,7 +9,6 @@ import '#auth/load.js';
 /* Addons */
 import '#servers/load.js';
 import '#scripts/load.js';
-import '#approvals/load.js';
 import '#packages/load.js';
 import '#logs/load.js';
 import '#gateways/load.js';

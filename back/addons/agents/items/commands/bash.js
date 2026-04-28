@@ -57,11 +57,32 @@ commands.Item({
 				code:    result.code === 200 ? result.data.code : result.code,
 				stdout:  result.code === 200 ? result.data.stdout : '',
 				stderr:  result.code === 200 ? result.data.stderr : '',
+				hash:    result.code === 401 && result.data ? result.data.hash : '',
 				message: result.message
 			};
 		});
 
-		const results = await Promise.all(runs);
+		const settled = await Promise.allSettled(runs);
+
+		const results = settled.map((entry, index) =>
+		{
+			if(entry.status === 'fulfilled')
+			{
+				return entry.value;
+			}
+
+			const server = list[index];
+
+			return {
+				server:  String(server.Get('id')),
+				name:    server.Get('name'),
+				code:    500,
+				stdout:  '',
+				stderr:  '',
+				hash:    '',
+				message: entry.reason && entry.reason.message ? entry.reason.message : 'Internal error.'
+			};
+		});
 
 		resolve({ results });
 	}

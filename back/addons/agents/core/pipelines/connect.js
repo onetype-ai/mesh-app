@@ -86,8 +86,13 @@ onetype.Pipeline('agents:connect', {
 				return item;
 			},
 			stream: () => stream,
-			bash: (command, passphrase, terminal = true, timeout = 120000) => stream.request('agent.bash', { command, passphrase, terminal, timeout }, null, null, timeout + 5000),
-			approve: (hashes, passphrase) => stream.request('agent.approve', { hashes, passphrase })
+			bash: (command, passphrase, command_id = null, terminal = true, timeout = 120000) => stream.request('agent.bash', { command, passphrase, terminal, timeout }, null, command_id, timeout + 5000),
+			approve: (hashes, passphrase) => stream.request('agent.approve', { hashes, passphrase }),
+			revoke: (hashes, passphrase) => stream.request('agent.revoke', { hashes, passphrase }),
+			cancel: (command_id) => stream.request('agent.cancel', { command_id }),
+			proxy_open: (tunnel_id, target_host, target_port) => stream.request('agent.proxy.open', { tunnel_id, target_host, target_port }),
+			proxy_data: (tunnel_id, payload) => stream.event('agent.proxy.data', { tunnel_id, data: payload }),
+			proxy_close: (tunnel_id) => stream.event('agent.proxy.close', { tunnel_id })
 		});
 
 		stream.agent_id = agent.Get('id');
@@ -140,16 +145,21 @@ onetype.Pipeline('agents:connect', {
 })
 
 .Join('static', 60, {
-	description: 'Collect static system information once.',
+	description: 'Collect static system information once. Best-effort: a failure here (e.g. agent in passphrase mode without the metrics script approved) must not abort the connect.',
 	requires: ['agent'],
 	callback: async function({ agent })
 	{
-		await this.Pipeline('agents:metrics.static', { agent_id: agent.Get('id') });
+		const result = await onetype.PipelineRun('agents:metrics.static', { agent_id: agent.Get('id') });
+
+		if(result.code !== 200)
+		{
+			console.log('[agents:connect] static metrics skipped:', result.code, result.message);
+		}
 	}
 })
 
 .Join('tick', 70, {
-	description: 'Schedule the dynamic metrics polling loop on the agent.',
+	description: 'Schedule the dynamic metrics polling loop. Same best-effort policy as static — a failing tick reschedules itself; it never aborts the connect.',
 	requires: ['agent'],
 	callback: async ({ agent }) =>
 	{
@@ -162,7 +172,12 @@ onetype.Pipeline('agents:connect', {
 				return;
 			}
 
-			await onetype.PipelineRun('agents:metrics.dynamic', { agent_id: agent.Get('id') });
+			const result = await onetype.PipelineRun('agents:metrics.dynamic', { agent_id: agent.Get('id') });
+
+			if(result.code !== 200)
+			{
+				console.log('[agents:connect] dynamic metrics skipped:', result.code, result.message);
+			}
 
 			if(!agents.ItemGet(agent.Get('id')))
 			{

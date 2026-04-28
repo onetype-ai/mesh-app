@@ -16,7 +16,6 @@
         "#agents/*": "./back/addons/agents/*",
         "#servers/*": "./back/addons/servers/*",
         "#scripts/*": "./back/addons/scripts/*",
-        "#approvals/*": "./back/addons/approvals/*",
         "#packages/*": "./back/addons/packages/*",
         "#logs/*": "./back/addons/logs/*",
         "#gateways/*": "./back/addons/gateways/*",
